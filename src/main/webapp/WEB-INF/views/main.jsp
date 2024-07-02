@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,9 +49,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#study-recruitment">모집게시판</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user">로그인</a>
-                </li>
+                <c:choose>
+                    <c:when test="${isLogin}">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/login">로그인</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+
             </ul>
         </div>
     </div>

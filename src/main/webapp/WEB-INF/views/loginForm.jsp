@@ -37,18 +37,18 @@
 <body>
 <div class="login-container">
     <div class="login-form">
-        <h3>LOGIN</h3>
-        <form action="<c:url value='/login' />" method="post">
+        <h3>로그인</h3>
+        <form action="${pageContext.request.contextPath}/login" method="post">
             <div class="form-group">
-                <label for="username">ID</label>
+                <label for="username">아이디</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter ID" required>
             </div>
             <div class="form-group">
-                <label for="password">PASSWORD</label>
+                <label for="password">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
             </div>
             <button type="submit" class="btn btn-primary">LOGIN</button>
-            <a href="/user/signup" class="signup-link">SIGNUP</a>
+            <a href="${pageContext.request.contextPath}/signup" class="signup-link">SIGNUP</a>
         </form>
     </div>
 </div>

@@ -9,28 +9,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.validation.FieldError;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("")
+    @GetMapping("/login")
     public String loginForm(Model model) {
-        return "loginForm";
+        return "loginForm"; // 로그인 페이지
     }
 
     @GetMapping("/signup")
     public String signupForm(Model model) {
-
-        return "signupForm";
+        return "signupForm"; // 회원가입 페이지
     }
 
     @PostMapping("/signup")
@@ -44,10 +37,6 @@ public class UserController {
             return "signupForm";
         }
         userService.save(userDto);
-        return "redirect:/";
+        return "redirect:/login";
     }
-
-
-
-
 }

@@ -42,7 +42,7 @@
 <div class="signup-container">
     <div class="signup-form">
         <h3>회원가입</h3>
-        <form action="/user/signup" method="post" enctype="multipart/form-data">
+        <form action="${pageContext.request.contextPath}/signup" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">아이디</label>
                 <input type="text" class="form-control ${usernameError != null ? 'is-invalid' : ''}" id="username" name="username" placeholder="아이디를 입력해주세요" value="${userDto != null ? userDto.username : ''}" minlength="5" maxlength="13" required>
