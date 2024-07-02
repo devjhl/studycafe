@@ -34,37 +34,7 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-        <a class="navbar-brand" href="#">Study Cafe</a>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#reservation">예약하기</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#study">스터디</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#study-recruitment">모집게시판</a>
-                </li>
-                <c:choose>
-                    <c:when test="${isLogin}">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
-                    </c:when>
-                    <c:otherwise>
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/login">로그인</a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
-
-            </ul>
-        </div>
-    </div>
-</nav>
-
+<jsp:include page="/WEB-INF/views/header.jsp" />
 <!-- Main Content -->
 <div class="container">
     <!-- Main Banner -->
@@ -186,12 +156,7 @@
     </div>
 </div>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <span>스터디 카페 & 스터디 모임 게시판 &copy; 2024</span>
-    </div>
-</footer>
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
