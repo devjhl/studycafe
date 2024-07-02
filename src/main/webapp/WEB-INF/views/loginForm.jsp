@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,17 +40,23 @@
 <div class="login-container">
     <div class="login-form">
         <h3>로그인</h3>
+        <!-- 에러 메시지 표시 -->
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" role="alert">
+                    ${errorMessage}
+            </div>
+        </c:if>
         <form action="${pageContext.request.contextPath}/login" method="post">
             <div class="form-group">
                 <label for="username">아이디</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter ID" required>
+                <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" required>
             </div>
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
             </div>
-            <button type="submit" class="btn btn-primary">LOGIN</button>
-            <a href="${pageContext.request.contextPath}/signup" class="signup-link">SIGNUP</a>
+            <button type="submit" class="btn btn-primary">로그인</button>
+            <a href="${pageContext.request.contextPath}/signup" class="signup-link">회원가입</a>
         </form>
     </div>
 </div>
