@@ -54,7 +54,7 @@
             </div>
             <div class="form-group">
                 <label for="password">비밀번호</label>
-                <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
+                <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" value="${userDto != null ? userDto.password : ''}" minlength="8" maxlength="20" required>
                 <div class="invalid-feedback">
                     <c:if test="${passwordError != null}">
                         ${passwordError}

@@ -40,6 +40,7 @@ public class UserController {
             bindingResult.getFieldErrors().forEach(fieldError ->
                     model.addAttribute(fieldError.getField() + "Error", fieldError.getDefaultMessage())
             );
+            model.addAttribute("userDto", userDto);
             return "signupForm";
         }
         userService.save(userDto);
