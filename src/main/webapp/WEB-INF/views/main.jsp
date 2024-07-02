@@ -49,7 +49,7 @@
                     <a class="nav-link" href="#study-recruitment">모집게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/">로그인</a>
+                    <a class="nav-link" href="/user">로그인</a>
                 </li>
             </ul>
         </div>
