@@ -6,13 +6,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#reservation">예약하기</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/reservation">예약하기</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#study">스터디</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#study-recruitment">모집게시판</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/gather">모집게시판</a>
                 </li>
                 <c:choose>
                     <c:when test="${isLogin}">
