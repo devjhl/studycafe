@@ -42,7 +42,7 @@ public class GatherController {
             model.addAttribute("user", loginUsername);
             model.addAttribute("totalPages", gatherPage.getTotalPages());
             model.addAttribute("currentPage", page);
-            return "list"; // 적절한 뷰 이름으로 변경
+            return "list";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("errorMessage", "An error occurred while fetching the data.");

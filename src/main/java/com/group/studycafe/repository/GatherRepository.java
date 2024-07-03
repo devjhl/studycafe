@@ -13,7 +13,7 @@ public interface GatherRepository extends JpaRepository<Gather, Long> {
     Page<Gather> findAll(Pageable pageable);
 
     @Query("SELECT g FROM Gather g WHERE g.title LIKE %:keyword% OR g.content LIKE %:keyword%")
-    Page<Gather> searchGather(@Param("keyword") String keyword, Pageable pageable);
+    Page<Gather> searchGather(String keyword, Pageable pageable);
 
     Gather findById(long id);
 

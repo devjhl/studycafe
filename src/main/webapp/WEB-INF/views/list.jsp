@@ -42,12 +42,12 @@
         <a class="nav-item nav-link" href="#">모집완료</a>
     </nav>
     <div class="container mt-5">
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="관심 스터디를 검색해보세요!">
+        <form action="/gather" method="get" class="input-group mb-3">
+            <input type="text" class="form-control" name="keyword" placeholder="관심 스터디를 검색해보세요!" value="${keyword}">
             <div class="input-group-append">
-                <button class="btn btn-success" type="button">검색</button>
+                <button class="btn btn-success" type="submit">검색</button>
             </div>
-        </div>
+        </form>
     </div>
     <div class="btn-group mb-3" role="group" aria-label="Sorting buttons">
         <button type="button" class="btn btn-outline-secondary">최신순</button>
@@ -65,14 +65,14 @@
                     <span class="badge badge-success">${gather.status}</span>
                         ${gather.title}
                 </h5>
-                <small class="text-muted">${gather.date}</small>
+                <small class="text-muted"><fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
             </div>
             <p class="card-text">${gather.content}</p>
 
             <div class="footer mt-3">
                 <div>
                     <span class="mr-2"><i class="fas fa-heart"></i> ${gather.likes}</span>
-                    <span class="mr-2"><i class="fas fa-comment"></i></span>
+                    <span class="mr-2"><i class="fas fa-comment"></i>0</span>
                     <span><i class="fas fa-eye"></i> ${gather.views}</span>
                 </div>
             </div>

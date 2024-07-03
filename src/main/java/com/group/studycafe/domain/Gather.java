@@ -23,11 +23,13 @@ public class Gather {
     private int views;
     private int likes;
     @Column(updatable = false)
-    private LocalDateTime date;
     private String status; // 모집중 , 모집완료
 
-    public String getFormattedCreateDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return this.date.format(formatter);
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
+    @PrePersist
+    protected void onCreate() {
+        date = new Date();
     }
 }
