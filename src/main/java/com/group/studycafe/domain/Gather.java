@@ -1,21 +1,19 @@
 package com.group.studycafe.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
+@Table(name = "gather")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity
 public class Gather {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String title;
     private String content;
     private String username;
@@ -23,5 +21,4 @@ public class Gather {
     private int likes;
     private Date date;
     private String status; // 모집중 , 모집완료
-
 }
