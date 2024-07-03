@@ -41,14 +41,14 @@
     <div id="mainCarousel" class="carousel slide mb-5" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="https://via.placeholder.com/1200x600" class="d-block w-100" alt="Main Banner 1">
+                <img src="${pageContext.request.contextPath}/img/big_banner.png" class="d-block w-100" alt="Main Banner 1">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>스터디 카페 & 스터디 모임</h5>
                     <p>함께 성장하고 배우는 공간</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="https://via.placeholder.com/1200x600" class="d-block w-100" alt="Main Banner 2">
+                <img src="${pageContext.request.contextPath}/img/big_banner.png" class="d-block w-100" alt="Main Banner 2">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>스터디 카페 & 스터디 모임</h5>
                     <p>함께 성장하고 배우는 공간</p>
@@ -71,7 +71,7 @@
             <div class="card">
                 <div class="card-header">공지사항</div>
                 <div class="card-body">
-                    <img src="https://via.placeholder.com/500x400" alt="Notices">
+                    <img src="${pageContext.request.contextPath}/img/notice_banner.png" alt="Notices" class="img-fluid">
                     <p class="card-text mt-2">최신 공지사항을 확인하세요.</p>
                     <a href="#" class="btn btn-primary">더보기</a>
                 </div>
@@ -81,7 +81,7 @@
             <div class="card">
                 <div class="card-header">스터디 지점 안내</div>
                 <div class="card-body">
-                    <img src="https://via.placeholder.com/500x400" alt="Study Spots">
+                    <img src="${pageContext.request.contextPath}/img/spot.jpg" alt="Study Spots" class="img-fluid">
                     <p class="card-text mt-2">가까운 스터디 지점을 찾아보세요.</p>
                     <a href="#" class="btn btn-primary">더보기</a>
                 </div>
@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <!-- Study Recruitment -->
+  <%--  <!-- Study Recruitment -->
     <div class="card mb-5">
         <div class="card-header">스터디 모집 공고</div>
         <div class="card-body">
@@ -124,10 +124,10 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div>--%>
 
     <!-- Event Section -->
-    <div class="card mb-5">
+   <%-- <div class="card mb-5">
         <div class="card-header">이벤트</div>
         <div class="card-body">
             <div id="eventCarousel" class="carousel slide" data-ride="carousel">
@@ -153,7 +153,7 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div>--%>
 </div>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />

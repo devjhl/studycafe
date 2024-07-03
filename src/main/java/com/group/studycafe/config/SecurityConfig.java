@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -45,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/", "/login", "/signup", "/error", "/WEB-INF/views/**").permitAll()
+                                .requestMatchers("/img/**", "/css/**", "/js/**").permitAll()  // 정적 리소스 접근 허용
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
