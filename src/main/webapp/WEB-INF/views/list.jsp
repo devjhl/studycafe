@@ -32,7 +32,6 @@
             justify-content: space-between;
         }
     </style>
-
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -58,98 +57,27 @@
     </div>
     <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
     <div class="clearfix"></div>
+    <c:forEach var="gather" items="${gatherList}">
+        <div class="study-card">
+            <div class="d-flex justify-content-between">
+                <h5 class="card-title" onclick="location.href='<c:url value='/gather/${gather.id}'/>';">
 
-    <div class="study-card">
-        <div class="d-flex justify-content-between">
-            <h5 class="card-title">
-                <span class="badge badge-success">모집중</span>
-                CKA 스터디 모집합니다.
-            </h5>
-            <small class="text-muted">6시간 전</small>
-        </div>
-        <p class="card-text">자격증 준비 스터디</p>
-        <div>
-            <span class="badge badge-primary">ABC</span>
-            <span class="badge badge-primary">자격증</span>
-        </div>
-        <div class="footer mt-3">
-            <div>
-                <span class="mr-2"><i class="fas fa-heart"></i> 10</span>
-                <span class="mr-2"><i class="fas fa-comment"></i> 5</span>
-                <span><i class="fas fa-eye"></i> 61</span>
+                    <span class="badge badge-success">${gather.status}</span>
+                        ${gather.title}
+                </h5>
+                <small class="text-muted">${gather.date}</small>
+            </div>
+            <p class="card-text">${gather.content}</p>
+
+            <div class="footer mt-3">
+                <div>
+                    <span class="mr-2"><i class="fas fa-heart"></i> ${gather.likes}</span>
+                    <span class="mr-2"><i class="fas fa-comment"></i></span>
+                    <span><i class="fas fa-eye"></i> ${gather.views}</span>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="study-card">
-        <div class="d-flex justify-content-between">
-            <h5 class="card-title">
-                <span class="badge badge-success">모집중</span>
-                같이 7월 목표 100% 달성해요!
-            </h5>
-            <small class="text-muted">17시간 전</small>
-        </div>
-        <p class="card-text">안녕하세요!</p>
-        <div>
-            <span class="badge badge-primary">목표달성</span>
-            <span class="badge badge-primary">커뮤니티</span>
-        </div>
-        <div class="footer mt-3">
-            <div>
-                <span class="mr-2"><i class="fas fa-heart"></i> 20</span>
-                <span class="mr-2"><i class="fas fa-comment"></i> 15</span>
-                <span><i class="fas fa-eye"></i> 219</span>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="study-card">
-        <div class="d-flex justify-content-between">
-            <h5 class="card-title">
-                <span class="badge badge-success">모집중</span>
-                개발과외 모집
-            </h5>
-            <small class="text-muted">20시간 전</small>
-        </div>
-        <p class="card-text">안녕하세요, 현재 서울에서 풀스택 개발자로 재직중인 개발자입니다.</p>
-        <div>
-            <span class="badge badge-primary">개발</span>
-            <span class="badge badge-primary">과외</span>
-        </div>
-        <div class="footer mt-3">
-            <div>
-                <span class="mr-2"><i class="fas fa-heart"></i> 5</span>
-                <span class="mr-2"><i class="fas fa-comment"></i> 0</span>
-                <span><i class="fas fa-eye"></i> 148</span>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="study-card">
-        <div class="d-flex justify-content-between">
-            <h5 class="card-title">
-                <span class="badge badge-success">모집중</span>
-                강남역 모각코 모집
-            </h5>
-            <small class="text-muted">23시간 전</small>
-        </div>
-        <p class="card-text">[개발 스터디 모집 내용 예시] 스터디 주제 : 모각코 예상 스터디 일정</p>
-        <div>
-            <span class="badge badge-primary">강남</span>
-            <span class="badge badge-primary">모각코</span>
-            <span class="badge badge-primary">개발</span>
-        </div>
-        <div class="footer mt-3">
-            <div>
-                <span class="mr-2"><i class="fas fa-heart"></i> 6</span>
-                <span class="mr-2"><i class="fas fa-comment"></i> 1</span>
-                <span><i class="fas fa-eye"></i> 184</span>
-            </div>
-        </div>
-    </div>
-
+    </c:forEach>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

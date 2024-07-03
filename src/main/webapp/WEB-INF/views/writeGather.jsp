@@ -27,19 +27,14 @@
         <i class="fas fa-info-circle"></i> 스터디 모집 예시를 참고해 작성해주세요. 꼼꼼히 작성하면 멋진 스터디 팀원을 만날 수 있을거에요.
     </div>
     <h1 class="h4 mb-4">제목에 핵심 내용을 요약해보세요.</h1>
-    <form action="gather/write" method="post">
+    <form action="/gather/write" method="post">
         <div class="form-group">
             <label for="title">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="스터디 제목을 입력하세요" required>
-        </div>
-        <div class="form-group">
-            <label for="tags">태그를 설정하세요 (최대 10개)</label>
-            <input type="text" class="form-control" id="tags" placeholder="#태그를 입력하세요">
+            <input type="text" class="form-control" id="title" name="title" placeholder="스터디 제목을 입력하세요" required>
         </div>
         <div class="form-group">
             <label for="content">내용</label>
-
-            <textarea class="form-control" id="content" rows="10" placeholder="스터디 내용을 입력하세요" required>
+            <textarea class="form-control" id="content" name="content" rows="10" placeholder="스터디 내용을 입력하세요" required>
 [개발 스터디 모집 내용 예시]
 
 - 스터디 주제 :
@@ -58,6 +53,7 @@
         </div>
     </form>
 </div>
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
