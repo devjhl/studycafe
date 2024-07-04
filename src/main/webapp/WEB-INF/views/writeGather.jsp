@@ -9,7 +9,13 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
         .container {
+            flex: 1;
             margin-top: 20px;
         }
         .form-group {
@@ -18,7 +24,14 @@
         .editor-toolbar {
             margin-bottom: 10px;
         }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+        }
     </style>
+
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />

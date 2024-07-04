@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
+        }
         .search-bar {
             margin-bottom: 20px;
         }
@@ -31,7 +39,17 @@
             display: flex;
             justify-content: space-between;
         }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+        .pagination {
+            justify-content : center;
+        }
     </style>
+
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -72,16 +90,36 @@
             <div class="footer mt-3">
                 <div>
                     <span class="mr-2"><i class="fas fa-heart"></i> ${gather.likes}</span>
-                    <span class="mr-2"><i class="fas fa-comment"></i>0</span>
+                    <span class="mr-2"><i class="fas fa-comment"></i> 0</span>
                     <span><i class="fas fa-eye"></i> ${gather.views}</span>
                 </div>
             </div>
         </div>
     </c:forEach>
+    <nav>
+        <ul class="pagination">
+            <!-- 이전 페이지 버튼 수정 -->
+            <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}">이전</a>
+            </li>
+            <!-- 페이지 번호 버튼 수정 -->
+            <c:forEach var="i" begin="1" end="${totalPages}">
+                <li class="page-item ${currentPage + 1 == i ? 'active' : ''}">
+                    <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}">${i}</a>
+                </li>
+            </c:forEach>
+            <!-- 다음 페이지 버튼 수정 -->
+            <li class="page-item ${currentPage + 1 >= totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}">다음</a>
+            </li>
+        </ul>
+    </nav>
+
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 </body>
 </html>

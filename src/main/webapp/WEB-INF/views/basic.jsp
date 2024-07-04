@@ -8,8 +8,13 @@
     <title>이용권 구매</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body, html {
-            height: 100%;
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            flex: 1;
         }
         .text-center i {
             font-size: 24px;
@@ -54,6 +59,7 @@
             background-color: #f8f9fa;
             padding: 20px;
             text-align: center;
+            margin-top: auto;
         }
         nav {
             background-color: #007bff;
@@ -65,8 +71,8 @@
         nav .navbar-nav .nav-link {
             color: #fff;
         }
-
     </style>
+
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />

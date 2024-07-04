@@ -18,9 +18,8 @@
         }
         .comment-box {
             margin-top: 20px;
-        }
-    </style>
-</head>
+
+        </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <div class="container mt-5">
