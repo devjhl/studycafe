@@ -72,13 +72,14 @@
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <div class="container mt-5">
     <nav class="nav nav-tabs">
-        <a class="nav-item nav-link active" href="#">전체</a>
-        <a class="nav-item nav-link" href="#">모집중</a>
-        <a class="nav-item nav-link" href="#">모집완료</a>
+        <a class="nav-item nav-link ${status == null || status == '' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=">전체</a>
+        <a class="nav-item nav-link ${status == '모집중' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집중">모집중</a>
+        <a class="nav-item nav-link ${status == '모집완료' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집완료">모집완료</a>
     </nav>
     <div class="container mt-5">
         <form action="/gather" method="get" class="input-group mb-3">
             <input type="text" class="form-control" name="keyword" placeholder="관심 스터디를 검색해보세요!" value="${keyword}">
+            <input type="hidden" name="status" value="${status}">
             <div class="input-group-append">
                 <button class="btn btn-success" type="submit">검색</button>
             </div>
@@ -91,7 +92,7 @@
         <button type="button" class="btn btn-outline-secondary">좋아요순</button>
     </div>
     <c:if test="${loginUsername != null}">
-    <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
+        <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
     </c:if>
     <div class="clearfix"></div>
     <c:forEach var="gather" items="${gatherList}">
@@ -117,17 +118,17 @@
         <ul class="pagination">
             <!-- 이전 페이지 버튼 수정 -->
             <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
-                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}">이전</a>
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}&status=${status}">이전</a>
             </li>
             <!-- 페이지 번호 버튼 수정 -->
             <c:forEach var="i" begin="1" end="${totalPages}">
                 <li class="page-item ${currentPage + 1 == i ? 'active' : ''}">
-                    <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}">${i}</a>
+                    <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}&status=${status}">${i}</a>
                 </li>
             </c:forEach>
             <!-- 다음 페이지 버튼 수정 -->
             <li class="page-item ${currentPage + 1 >= totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}">다음</a>
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}&status=${status}">다음</a>
             </li>
         </ul>
     </nav>

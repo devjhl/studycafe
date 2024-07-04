@@ -17,6 +17,11 @@ public interface GatherRepository extends JpaRepository<Gather, Long> {
     @Query("SELECT g FROM Gather g WHERE g.title LIKE %:keyword% OR g.content LIKE %:keyword%")
     Page<Gather> searchGather(@Param("keyword") String keyword, Pageable pageable);
 
+    @Query("SELECT g FROM Gather g WHERE (g.title LIKE %:keyword% OR g.content LIKE %:keyword%) AND g.status = :status")
+    Page<Gather> searchGatherByStatus(@Param("keyword") String keyword, @Param("status") String status, Pageable pageable);
+
+    Page<Gather> findByStatus(String status, Pageable pageable);
+
     @Modifying
     @Transactional
     @Query("UPDATE Gather g SET g.status = '모집완료' WHERE g.id = :id")

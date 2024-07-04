@@ -25,7 +25,8 @@ public class GatherController {
     @GetMapping("")
     public String gather(Model model,
                          @RequestParam(defaultValue = "0") int page,
-                         @RequestParam(required = false) String keyword) {
+                         @RequestParam(required = false) String keyword,
+                         @RequestParam(required = false) String status) {
         String loginUsername = UserInfo.getCurrentUsername();
 
         try {
@@ -33,16 +34,25 @@ public class GatherController {
             Page<Gather> gatherPage;
 
             if (keyword != null && !keyword.isEmpty()) {
-                gatherPage = gatherService.searchGathers(keyword, pageable);
+                if (status != null && !status.isEmpty()) {
+                    gatherPage = gatherService.searchGathersByStatus(keyword, status, pageable);
+                } else {
+                    gatherPage = gatherService.searchGathers(keyword, pageable);
+                }
                 model.addAttribute("keyword", keyword);
             } else {
-                gatherPage = gatherService.findAll(pageable);
+                if (status != null && !status.isEmpty()) {
+                    gatherPage = gatherService.findByStatus(status, pageable);
+                } else {
+                    gatherPage = gatherService.findAll(pageable);
+                }
             }
             model.addAttribute("loginUsername", loginUsername);
             model.addAttribute("gatherList", gatherPage.getContent());
             model.addAttribute("user", loginUsername);
             model.addAttribute("totalPages", gatherPage.getTotalPages());
             model.addAttribute("currentPage", page);
+            model.addAttribute("status", status);
             return "list";
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,6 +60,7 @@ public class GatherController {
             return "error"; // 에러 페이지로 리다이렉트
         }
     }
+
     @GetMapping("/{id}")
     public String detailGather(@PathVariable Long id, Model model) {
         Gather gather = gatherService.findById(id);

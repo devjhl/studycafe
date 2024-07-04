@@ -47,6 +47,14 @@ public class GatherService {
         return gatherRepository.searchGather(keyword, pageable);
     }
 
+    public Page<Gather> searchGathersByStatus(String keyword, String status, Pageable pageable) {
+        return gatherRepository.searchGatherByStatus(keyword, status, pageable);
+    }
+
+    public Page<Gather> findByStatus(String status, Pageable pageable) {
+        return gatherRepository.findByStatus(status, pageable);
+    }
+
     @Transactional
     public void updateStatus(Long id) {
         Gather gather = gatherRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid gather ID"));
