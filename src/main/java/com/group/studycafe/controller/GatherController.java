@@ -72,7 +72,4 @@ public class GatherController {
         model.addAttribute("gather", gather);
         return "redirect:/gather";
     }
-
-    
-
 }

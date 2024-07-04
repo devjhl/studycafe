@@ -1,4 +1,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,8 +39,8 @@
         }
         .sidebar {
             position: fixed;
-            top: 150px; /* 원하는 위치에 맞게 조정 */
-            right: calc((100% - 800px) / 2 - 50px); /* 게시글 옆에 위치하도록 조정 */
+            top: 150px;
+            right: calc((100% - 800px) / 2 - 50px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -54,6 +55,10 @@
         }
         .btn-status {
             background-color: #ddd;
+        }
+        .btn-status-complete {
+            background-color: #d3d3d3;
+            color: #fff;
         }
         .btn-like {
             background-color: #ff6b6b;
@@ -97,10 +102,14 @@
         </div>
     </div>
     <div class="sidebar">
-        <button class="btn btn-status">모집중</button>
-        <button class="btn btn-like"><i class="fas fa-heart"></i> 0</button>
+        <c:if test="${username == gather.username}">
+            <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status}</button>
+        </c:if>
+        <button class="btn btn-like" id="likeBtn" data-gather-id="${gather.id}"><i class="fas fa-heart"></i> ${gather.likes}</button>
         <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
+
+
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -114,6 +123,51 @@
             alert('현재 페이지 링크가 복사되었습니다.');
         }, function(err) {
             console.error('링크 복사 실패: ', err);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('statusBtn').addEventListener('click', () => {
+            const gatherId = ${gather.id}
+                fetch('/api/updateStatus/' + gatherId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Network response was not ok.');
+                        }
+                    })
+                    .then(data => {
+                        document.getElementById('statusBtn').classList.remove('btn-status');
+                        document.getElementById('statusBtn').classList.add('btn-status-complete');
+                        document.getElementById('statusBtn').innerText = '모집완료';
+                    })
+                    .catch(error => {
+                        alert('Error updating status: ' + error.message);
+                    });
+        });
+    });
+
+
+
+
+    document.getElementById('likeBtn').addEventListener('click', function() {
+        const gatherId = this.getAttribute('data-gather-id');
+        $.ajax({
+            type: 'POST',
+            url: '/api/likeGather',
+            data: { id: gatherId },
+            success: function(response) {
+                document.getElementById('likeBtn').innerHTML = '<i class="fas fa-heart"></i> ' + response;
+            },
+            error: function(error) {
+                console.error('좋아요 업데이트 실패: ', error);
+            }
         });
     });
 </script>

@@ -54,6 +54,13 @@
         .pagination {
             justify-content: center;
         }
+        .btn-status {
+            background-color: #ddd;
+        }
+        .btn-status-complete {
+            background-color: #d3d3d3;
+            color: #fff;
+        }
     </style>
     <script>
         function goToDetail(id) {
@@ -91,7 +98,7 @@
         <div class="study-card" onclick="goToDetail(${gather.id})">
             <div class="d-flex justify-content-between">
                 <h5 class="card-title">
-                    <span class="badge badge-success">${gather.status}</span>
+                    <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status}</button>
                         ${gather.title}
                 </h5>
                 <small class="text-muted"><strong>${gather.username}</strong> <fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>

@@ -22,7 +22,6 @@ public class Gather {
     private String username;
     private int views;
     private int likes;
-    @Column(updatable = false)
     private String status; // 모집중 , 모집완료
 
     @Temporal(TemporalType.TIMESTAMP)
