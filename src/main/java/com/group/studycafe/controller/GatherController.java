@@ -83,4 +83,11 @@ public class GatherController {
         model.addAttribute("gather", gather);
         return "redirect:/gather";
     }
+
+    @GetMapping("/updateGather/{id}")
+    public String updateGather(@PathVariable Long id, Model model) {
+        Gather gather = gatherService.findById(id);
+        model.addAttribute("gather", gather);
+        return "updateGather";
+    }
 }

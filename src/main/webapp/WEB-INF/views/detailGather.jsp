@@ -82,6 +82,10 @@
         <div class="post-content">
             <pre>${gather.content}</pre>
         </div>
+        <c:if test="${username == gather.username}">
+            <a class="btn btn-warning btn-edit" href="/gather/updateGather/${gather.id}">수정</a>
+        <button class="btn btn-danger btn-delete" onclick="deleteGather()">삭제</button>
+        </c:if>
         <div class="comment-box">
             <h5>댓글</h5>
             <form>
@@ -152,6 +156,8 @@
                     });
         });
     });
+
+
 
 
 

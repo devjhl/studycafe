@@ -2,6 +2,7 @@ package com.group.studycafe.controller;
 
 import com.group.studycafe.domain.Gather;
 import com.group.studycafe.service.GatherService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,18 @@ public class GatherApiController {
             return ResponseEntity.ok("Status updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating status");
+        }
+    }
+
+
+    @PutMapping("/updateGather/{id}")
+    public ResponseEntity<Gather> updateGather(@PathVariable Long id, @RequestBody Gather gather, HttpServletResponse response) {
+        try {
+            response.sendRedirect("/gather");
+            gatherService.updateGather(id,gather);
+            return ResponseEntity.ok(gather);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
     }
 
