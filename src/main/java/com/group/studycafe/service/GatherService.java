@@ -19,6 +19,7 @@ public class GatherService {
         return gatherRepository.findAll(pageable);
     }
     public Gather findById(Long id) {
+        gatherRepository.incrementViewCount(id); // 조회수 증가
         return gatherRepository.findById(id).orElse(null);
     }
     public Gather save(Gather gather) {

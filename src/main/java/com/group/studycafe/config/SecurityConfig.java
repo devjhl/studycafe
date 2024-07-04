@@ -46,7 +46,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/", "/login", "/signup", "/error", "/WEB-INF/views/**").permitAll()
+                                .requestMatchers("/", "/login", "/signup", "/error", "/WEB-INF/views/**","/gather","/gather/**").permitAll()
                                 .requestMatchers("/img/**", "/css/**", "/js/**").permitAll()  // 정적 리소스 접근 허용
                                 .anyRequest().authenticated()
                 )

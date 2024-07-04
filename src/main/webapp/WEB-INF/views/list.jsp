@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +32,11 @@
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 10px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .study-card:hover {
+            background-color: #f0f0f0;
         }
         .study-card .badge {
             margin-right: 5px;
@@ -46,10 +52,14 @@
             margin-top: auto;
         }
         .pagination {
-            justify-content : center;
+            justify-content: center;
         }
     </style>
-
+    <script>
+        function goToDetail(id) {
+            location.href = '${pageContext.request.contextPath}/gather/' + id;
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -73,20 +83,20 @@
         <button type="button" class="btn btn-outline-secondary">댓글많은순</button>
         <button type="button" class="btn btn-outline-secondary">좋아요순</button>
     </div>
+    <c:if test="${loginUsername != null}">
     <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
+    </c:if>
     <div class="clearfix"></div>
     <c:forEach var="gather" items="${gatherList}">
-        <div class="study-card">
+        <div class="study-card" onclick="goToDetail(${gather.id})">
             <div class="d-flex justify-content-between">
-                <h5 class="card-title" onclick="location.href='<c:url value='/gather/${gather.id}'/>';">
-
+                <h5 class="card-title">
                     <span class="badge badge-success">${gather.status}</span>
                         ${gather.title}
                 </h5>
-                <small class="text-muted"><fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
+                <small class="text-muted"><strong>${gather.username}</strong> <fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
             </div>
             <p class="card-text">${gather.content}</p>
-
             <div class="footer mt-3">
                 <div>
                     <span class="mr-2"><i class="fas fa-heart"></i> ${gather.likes}</span>
@@ -114,7 +124,6 @@
             </li>
         </ul>
     </nav>
-
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

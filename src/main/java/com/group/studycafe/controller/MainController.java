@@ -9,12 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/")
-    public String main(Model model) {
-        String username = UserInfo.getCurrentUsername();
-        boolean isLogin = (username != null);
-
-        model.addAttribute("isLogin", isLogin);
-        model.addAttribute("username", username);
+    public String main() {
 
         return "main";
     }

@@ -38,6 +38,7 @@ public class GatherController {
             } else {
                 gatherPage = gatherService.findAll(pageable);
             }
+            model.addAttribute("loginUsername", loginUsername);
             model.addAttribute("gatherList", gatherPage.getContent());
             model.addAttribute("user", loginUsername);
             model.addAttribute("totalPages", gatherPage.getTotalPages());
@@ -52,7 +53,6 @@ public class GatherController {
     @GetMapping("/{id}")
     public String detailGather(@PathVariable Long id, Model model) {
         Gather gather = gatherService.findById(id);
-        System.out.println("gather: " + gather);
         model.addAttribute("gather", gather);
         return "detailGather";
     }

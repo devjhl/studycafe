@@ -16,7 +16,9 @@
                 </li>
                 <c:choose>
                     <c:when test="${isLogin}">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
+                        </li>
                     </c:when>
                     <c:otherwise>
                         <li class="nav-item">
