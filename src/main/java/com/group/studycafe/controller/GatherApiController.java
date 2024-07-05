@@ -29,14 +29,23 @@ public class GatherApiController {
     }
 
 
-    @PutMapping("/updateGather/{id}")
-    public ResponseEntity<Gather> updateGather(@PathVariable Long id, @RequestBody Gather gather, HttpServletResponse response) {
+    @PatchMapping("/updateGather/{id}")
+    public ResponseEntity<Gather> updateGather(@PathVariable Long id, @RequestBody Gather gather) {
         try {
-            response.sendRedirect("/gather");
-            gatherService.updateGather(id,gather);
-            return ResponseEntity.ok(gather);
+            Gather updatedGather = gatherService.updateGather(id, gather);
+            return ResponseEntity.ok(updatedGather);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @DeleteMapping("/deleteGather/{id}")
+    public ResponseEntity<String> deleteGather(@PathVariable Long id) {
+        try {
+            gatherService.deleteGather(id);
+            return ResponseEntity.noContent().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(500).build();
         }
     }
 

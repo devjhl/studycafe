@@ -1,11 +1,10 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스터디 모집 작성</title>
+    <title>스터디 모집 수정</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
@@ -40,8 +39,9 @@
         <i class="fas fa-info-circle"></i> 스터디 모집 예시를 참고해 작성해주세요. 꼼꼼히 작성하면 멋진 스터디 팀원을 만날 수 있을거에요.
     </div>
     <h1 class="h4 mb-4">제목에 핵심 내용을 요약해보세요.</h1>
-    <input type="hidden" value="${gather.id}">
-    <input type="hidden" value="${username}">
+    <form id="gatherForm">
+        <input type="hidden" id="gatherId" value="${gather.id}">
+        <input type="hidden" id="username" value="${username}">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="스터디 제목을 입력하세요" value="${gather.title}" required>
@@ -54,30 +54,39 @@
             <button type="button" class="btn btn-secondary mr-2" onclick="location.href='/gather'">취소</button>
             <button type="submit" class="btn btn-success" id="editBtn">수정</button>
         </div>
+    </form>
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        document.getElementById('editBtn').addEventListener('click', () => {
-            const gatherId = ${gather.id}
-                fetch('/api/updateGather/' + gatherId, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.text();
-                        } else {
-                            throw new Error('Network response was not ok.');
-                        }
-                    })
-                    .then(data => {
+        document.getElementById('gatherForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const gatherId = document.getElementById('gatherId').value;
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
 
-                    })
-                    .catch(error => {
-                    });
+            const gather = {
+                title: title,
+                content: content
+            };
+
+            fetch('/api/updateGather/' + gatherId, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(gather)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/gather';
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
         });
     });
 </script>

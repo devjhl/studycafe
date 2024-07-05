@@ -70,10 +70,16 @@ public class GatherService {
         return gather.getLikes();
     }
 
-    public void updateGather(Long id, Gather gather) {
+    public Gather updateGather(Long id, Gather gather) {
         Gather existingGather = gatherRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid gather ID"));
         existingGather.setTitle(gather.getTitle());
         existingGather.setContent(gather.getContent());
         gatherRepository.save(existingGather);
+        return existingGather;
+    }
+
+    @Transactional
+    public void deleteGather(Long id) {
+        gatherRepository.deleteById(id);
     }
 }

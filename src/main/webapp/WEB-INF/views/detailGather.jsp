@@ -84,7 +84,7 @@
         </div>
         <c:if test="${username == gather.username}">
             <a class="btn btn-warning btn-edit" href="/gather/updateGather/${gather.id}">수정</a>
-        <button class="btn btn-danger btn-delete" onclick="deleteGather()">삭제</button>
+        <button class="btn btn-danger btn-delete" id="deleteBtn">삭제</button>
         </c:if>
         <div class="comment-box">
             <h5>댓글</h5>
@@ -129,6 +129,33 @@
             console.error('링크 복사 실패: ', err);
         });
     });
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('deleteBtn').addEventListener('click', () => {
+            const gatherId = ${gather.id};
+
+            if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+                fetch('/api/deleteGather/' + gatherId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('게시글이 삭제되었습니다.');
+                            window.location.href = '/gather';
+                        } else {
+                            throw new Error('Network response was not ok.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                    });
+            }
+        });
+    });
+
 
     document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('statusBtn').addEventListener('click', () => {
