@@ -55,7 +55,8 @@
             justify-content: center;
         }
         .btn-status {
-            background-color: #ddd;
+            background-color: #1dc078;
+            color: #fff;;
         }
         .btn-status-complete {
             background-color: #d3d3d3;

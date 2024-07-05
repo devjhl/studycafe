@@ -59,7 +59,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('editBtn').addEventListener('click', () => {
-            alert("수정시작");
             const gatherId = ${gather.id}
                 fetch('/api/updateGather/' + gatherId, {
                     method: 'PUT',
