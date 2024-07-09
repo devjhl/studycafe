@@ -1,43 +1,37 @@
 package com.group.studycafe.controller;
 
 import com.group.studycafe.domain.Order;
+import com.group.studycafe.dto.OrderRequest;
+import com.group.studycafe.repository.OrderRepository;
 import com.group.studycafe.service.OrderService;
-import org.springframework.stereotype.Controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/v1")
 public class OrderController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderRepository orderRepository;
 
     @PostMapping("/order")
-    public String createOrder(
-            @RequestParam String username,
-            @RequestParam String email,
-            @RequestParam String addr,
-            @RequestParam String phone,
-            @RequestParam int totalPrice,
-            Model model) {
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest) {
+        try {
+            Order order = new Order();
+            order.setUsername(orderRequest.getUsername());
+            order.setEmail(orderRequest.getEmail());
+            order.setPhone(orderRequest.getPhone());
+            order.setTotal_price(orderRequest.getTotalPrice());
+            order.setCreated_at(orderRequest.getCreatedAt());
 
-        Order order = new Order();
-        order.setUsername(username);
-        order.setEmail(email);
-        order.setAddr(addr);
-        order.setPhone(phone);
-        order.setTotalPrice(totalPrice);
+            orderRepository.save(order);
 
-        orderService.saveOrder(order);
-
-        model.addAttribute("order", order);
-
-        return "orderConfirmation";
+            return ResponseEntity.status(HttpStatus.CREATED).body(order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 저장 중 오류가 발생했습니다.");
+        }
     }
 }
-

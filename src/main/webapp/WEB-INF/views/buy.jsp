@@ -192,8 +192,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+    let userInfo = {
+        username: '${user.username}', // 서버에서 제공받은 사용자 이름
+        email: '${user.email}', // 서버에서 제공받은 이메일
+        phone: '${user.phone}' // 서버에서 제공받은 전화번호
+    };
+
     $(document).ready(function() {
-        // 총 결제 금액을 업데이트하는 함수
         function updateTotalPrice() {
             let totalPrice = 0;
             $('.selected_ticket').each(function () {
@@ -206,147 +211,120 @@
             $('#total_price').text(totalPrice);
         }
 
-        // 선택된 이용권을 선택한 이용권 섹션에 추가하는 함수
         function addSelectedTicket(title, price) {
-            // HTML 요소를 직접 생성하고 값을 설정
-            const $selectedTicket = $('<div>', { class: 'selected_ticket' });
-            const $ticketInfo = $('<div>', { class: 'ticket_info' });
-            const $dot = $('<div>', { class: 'dot' });
-            const $ticketTitle = $('<div>', { class: 'ticket_title', text: title });
-            const $ticketPrice = $('<div>', { class: 'ticket_price', text: price + '원' });
-
-            const $ticketQuantity = $('<input>', { type: 'number', class: 'ticket_quantity', value: 1, min: 1 });
-            const $removeButton = $('<button>', { type: 'button', class: 'btn btn-sm btn-danger remove_ticket', text: 'x' });
+            const $selectedTicket = $('<div>', {class: 'selected_ticket'});
+            const $ticketInfo = $('<div>', {class: 'ticket_info'});
+            const $dot = $('<div>', {class: 'dot'});
+            const $ticketTitle = $('<div>', {class: 'ticket_title', text: title});
+            const $ticketPrice = $('<div>', {class: 'ticket_price', text: price + '원'});
+            const $ticketQuantity = $('<input>', {type: 'number', class: 'ticket_quantity', value: 1, min: 1});
+            const $removeButton = $('<button>', {
+                type: 'button',
+                class: 'btn btn-sm btn-danger remove_ticket',
+                text: 'x'
+            });
 
             $ticketInfo.append($dot, $ticketTitle, $ticketPrice);
             $selectedTicket.append($ticketInfo, $ticketQuantity, $removeButton);
-
-            console.log("Adding HTML:", $selectedTicket.html());
             $('#selectedTickets').append($selectedTicket);
             updateTotalPrice();
         }
 
-        // 이용권 및 사물함 선택
-        $('.ticket_time').off('click').on('click', function(event) {
-            event.preventDefault();  // 이벤트의 기본 동작 방지
+        $('.ticket_time').on('click', function (event) {
+            event.preventDefault();
             const title = $(this).data('title');
             const price = $(this).data('price');
-            console.log("Data attributes - Title:", title, "Price:", price);
             addSelectedTicket(title, price);
         });
 
-        // 선택된 이용권 제거
-        $(document).on('click', '.remove_ticket', function() {
+        $(document).on('click', '.remove_ticket', function () {
             $(this).closest('.selected_ticket').remove();
             updateTotalPrice();
         });
 
-        // 선택된 이용권 수량 변경
-        $(document).on('change', '.ticket_quantity', function() {
+        $(document).on('change', '.ticket_quantity', function () {
             updateTotalPrice();
         });
 
-        // 부트페이 결제 호출
         $('#pay_btn').on('click', async function() {
-            const totalPrice = parseInt($('#total_price').text()); // 결제할 총 금액
+            const totalPrice = parseInt($('#total_price').text());
             if (isNaN(totalPrice) || totalPrice <= 0) {
                 alert("결제할 금액이 없습니다.");
                 return;
             }
 
             const requestData = {
-                price: totalPrice, // 결제할 금액
-                application_id: "668b746", // 부트페이에서 제공하는 Application ID
-                name: '이용권 결제', // 결제할 상품명
-                pg: 'kakao', // 사용할 PG사
-                method: 'easy', // 결제수단 (카카오페이)
-                show_agree_window: 0, // 부트페이 정책에 동의하는 창을 띄울지 여부
-                items: [
-                    {
-                        item_name: '이용권', // 상품명
-                        qty: 1, // 수량
-                        unique: '123', // 해당 상품을 구분짓는 primary key
-                        price: totalPrice // 상품 가격
-                    }
-                ],
-                user_info: {
-                    username: '사용자 이름',
-                    email: 'user@example.com',
-                    addr: '사용자 주소',
-                    phone: '010-1234-5678'
-                },
-                order_id: '고유 주문번호', // 주문번호
-                params: {callback1: '그대로 콜백받을 변수 1', callback2: '그대로 콜백받을 변수 2', customvar1234: '변수명도 마음대로'},
-                account_expire_at: '2024-12-31', // 가상계좌는 해당 값까지 입금 가능
+                price: totalPrice,
+                application_id: "668b746a6a325f79257ef328",
+                name: '이용권 결제',
+                pg: 'kakao',
+                method: 'easy',
+                show_agree_window: 0,
+                items: [{
+                    item_name: '이용권',
+                    qty: 1,
+                    unique: '123',
+                    price: totalPrice
+                }],
+                user_info: userInfo,
+                order_id: '고유 주문번호',
+                params: {callback1: 'value1', callback2: 'value2', customvar1234: 'custom'},
+                account_expire_at: '2024-12-31',
                 extra: {
-                    start_at: '2024-01-01', // 정기결제 사용시
-                    end_at: '2024-12-31', // 정기결제 사용시
-                    vbank_result: 1, // 가상계좌 이용시
-                    quota: '0,2,3' // 결제금액이 5만원 이상시 할부개월수 설정 가능, 0:일시불, 2:2개월 할부, 3:3개월 할부
+                    start_at: '2024-01-01',
+                    end_at: '2024-12-31',
+                    vbank_result: 1,
+                    quota: '0,2,3'
                 }
             };
 
             try {
-                console.log('Requesting payment with data:', requestData);
                 const response = await BootPay.request(requestData);
                 console.log('Bootpay response:', response);
 
-                switch (response.event) {
-                    case "issued":
-                        // 가상계좌 입금 완료 처리
-                        break;
-                    case "confirm":
-                        // receipt_id를 dto에 담아서
-                        const dto = {
-                            receiptId: response.receipt_id,
+                if (response && response.status) {
+                    console.log('Bootpay response status:', response.status);
+
+                    if (response.status === 'done') {
+                        alert("결제 완료되었습니다.");
+
+                        const orderData = {
+                            username: userInfo.username,
+                            email: userInfo.email,
+                            phone: userInfo.phone,
+                            total_price: parseInt(totalPrice),
+                            created_at: new Date().toISOString()
                         };
 
-                        //  '/api/v1/bootpay/check' 로 보낸다.
-                        fetch("/api/v1/bootpay/check", {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json",
-                            },
-                            body: JSON.stringify(dto),
-                        })
-                            .then((res) => res.json())
-                            .then((result) => {
-                                // 정상적으로 처리되었는지 메시지를 띄운다.
-                                // 정상적으로 승인이 되면 코드에 0을 반환할 것이고,
-                                if (result.code === 0) {
-                                    // 결제창을 닫는다.
-                                    BootPay.close();
-                                    alert(result.message);
+                        const orderResponse = await fetch('/api/v1/order', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(orderData)
+                        });
 
-                                    // 결제 완료 화면으로 리디렉션
-                                    window.location.href = "/orderConfirmation";
-                                } else {
-                                    alert(result.message);
-                                }
-                            })
-                            .catch((err) => {
-                                console.error('Error during fetching check:', err);
-                            });
-                        break;
-                    case "done":
-                        // 결제 완료 처리
-                        alert("결제 완료되었습니다.");
-                        window.location.href = "/orderConfirmation";
-                        break;
-                    case "cancel":
-                        // 결제 취소 처리
+                        if (orderResponse.ok) {
+                            const data = await orderResponse.json();
+                            console.log('Order saved:', data);
+                            window.location.href = '/orderConfirmation';
+                        } else {
+                            const errorText = await orderResponse.text();
+                            throw new Error(`주문 저장 중 오류가 발생했습니다: ${errorText}`);
+                        }
+                    } else if (response.status === 'cancel') {
                         alert("결제가 취소되었습니다.");
-                        break;
-                    default:
-                        console.error('Unknown event:', response.event);
-                        break;
+                    } else {
+                        console.error('Unexpected status:', response.status);
+                    }
+                } else {
+                    console.error('Bootpay response status is undefined or invalid:', response);
                 }
             } catch (error) {
-                // 결제 진행중 오류 발생
                 console.error('Error during payment request:', error);
+                alert('결제 요청에 실패했습니다. 다시 시도해주세요.');
             }
         });
     });
 </script>
+
 </body>
 </html>

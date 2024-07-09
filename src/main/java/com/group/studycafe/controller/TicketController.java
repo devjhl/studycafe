@@ -1,8 +1,10 @@
 package com.group.studycafe.controller;
 
 import com.group.studycafe.domain.Ticket;
+import com.group.studycafe.domain.User;
 import com.group.studycafe.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,11 @@ public class TicketController {
     private TicketService ticketService;
 
     @GetMapping("/buy")
-    public String showBuyPage(Model model) {
+    public String showBuyPage(Model model,@AuthenticationPrincipal User user) {
+
+        //로그인정보
+        model.addAttribute("user", user);
+
         // Fetch the ticket lists
         List<Ticket> ticketList1 = ticketService.getTicketsByCategory("1회 이용권");
         List<Ticket> ticketList2 = ticketService.getTicketsByCategory("기간 이용권");
