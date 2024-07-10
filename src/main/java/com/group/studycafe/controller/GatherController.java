@@ -3,6 +3,8 @@ package com.group.studycafe.controller;
 import com.group.studycafe.config.UserInfo;
 import com.group.studycafe.domain.Gather;
 import com.group.studycafe.domain.Status;
+import com.group.studycafe.dto.CommentDto;
+import com.group.studycafe.service.CommentService;
 import com.group.studycafe.service.GatherService;
 import com.group.studycafe.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/gather")
 @Controller
@@ -21,6 +25,7 @@ public class GatherController {
 
     private final GatherService gatherService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @GetMapping("")
     public String gather(Model model,
@@ -64,7 +69,9 @@ public class GatherController {
     @GetMapping("/{id}")
     public String detailGather(@PathVariable Long id, Model model) {
         Gather gather = gatherService.findById(id);
+        List<CommentDto> commentDtos = commentService.comments(id);
         model.addAttribute("gather", gather);
+        model.addAttribute("commentDtos", commentDtos);
         return "detailGather";
     }
 
