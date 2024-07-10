@@ -207,20 +207,67 @@
             });
         });
 
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const gatherId = ${gather.id};
+            const commentBody = document.getElementById('commentBody').value;
+            const commentUsername = document.getElementById('commentUsername').value;
+            if (commentBody.trim() === '') {
+                alert('댓글을 입력해주세요.');
+                return;
+            }
+
+            fetch('/api/gather/' + gatherId + '/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ body: commentBody, username: commentUsername, gatherId: gatherId })
+            })
+                .then(response => {
+                    console.log('서버 응답 수신:', response);
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('댓글 작성 성공:', data);
+                    const commentList = document.getElementById('commentsList');
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('media', 'mb-3');
+                    newComment.innerHTML = `
+            <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
+            <div class="media-body">
+                <h6 class="mt-0">${data.username}</h6>
+                <p class="comment-body">${data.body}</p>
+                <input type="text" class="form-control comment-body-edit" style="display:none;" value="${data.body}">
+                <div class="comment-actions">
+                    <button class="btn btn-secondary btn-sm btn-edit-comment" data-comment-id="${data.id}">수정</button>
+                    <button class="btn btn-primary btn-sm btn-save-comment" data-comment-id="${data.id}" style="display:none;">저장</button>
+                    <button class="btn btn-danger btn-sm btn-delete-comment" data-comment-id="${data.id}">삭제</button>
+                </div>
+            </div>
+        `;
+                    commentList.prepend(newComment);
+                    document.getElementById('commentBody').value = '';
+                })
+                .catch(error => {
+                    console.error('댓글 작성 실패:', error);
+                    alert('댓글 작성에 실패했습니다: ' + error.message);
+                });
+        });
+
         document.getElementById('commentsList').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-edit-comment')) {
                 const commentElement = event.target.closest('.media');
                 const commentBodyElement = commentElement.querySelector('.comment-body');
                 const commentBodyEditElement = commentElement.querySelector('.comment-body-edit');
                 const saveButton = commentElement.querySelector('.btn-save-comment');
-                const editButton = event.target;
-                const deleteButton = commentElement.querySelector('.btn-delete-comment'); // 삭제 버튼
 
                 commentBodyElement.style.display = 'none';
                 commentBodyEditElement.style.display = 'block';
                 saveButton.style.display = 'inline-block';
-                editButton.style.display = 'none'; // 수정 버튼 숨기기
-                deleteButton.style.display = 'none'; // 삭제 버튼 숨기기
             } else if (event.target.classList.contains('btn-save-comment')) {
                 const commentElement = event.target.closest('.media');
                 const commentId = event.target.getAttribute('data-comment-id');
@@ -249,10 +296,6 @@
                         commentBodyElement.style.display = 'block';
                         commentBodyEditElement.style.display = 'none';
                         event.target.style.display = 'none';
-
-                        // 수정 버튼 및 삭제 버튼 다시 보이게 설정
-                        commentElement.querySelector('.btn-edit-comment').style.display = 'inline-block';
-                        commentElement.querySelector('.btn-delete-comment').style.display = 'inline-block';
                     })
                     .catch(error => {
                         console.error('댓글 수정 실패:', error);
