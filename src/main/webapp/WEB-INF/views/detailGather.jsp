@@ -225,16 +225,17 @@
                 body: JSON.stringify({ body: commentBody, username: commentUsername, gatherId: gatherId })
             })
                 .then(response => {
+                    console.log('서버 응답 수신:', response);
                     if (!response.ok) {
                         return response.json().then(error => { throw new Error(error.message); });
                     }
                     return response.json();
                 })
                 .then(data => {
+                    console.log('댓글 작성 성공:', data);
                     const commentList = document.getElementById('commentsList');
                     const newComment = document.createElement('div');
                     newComment.classList.add('media', 'mb-3');
-                    newComment.setAttribute('data-comment-id', data.id);
                     newComment.innerHTML = `
             <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
             <div class="media-body">
@@ -256,7 +257,6 @@
                     alert('댓글 작성에 실패했습니다: ' + error.message);
                 });
         });
-
 
         document.getElementById('commentsList').addEventListener('click', function(event) {
             if (event.target.classList.contains('btn-edit-comment')) {
