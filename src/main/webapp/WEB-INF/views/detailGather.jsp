@@ -68,6 +68,9 @@
             background-color: #4caf50;
             color: white;
         }
+        .comment-actions {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -84,24 +87,35 @@
         </div>
         <c:if test="${username == gather.username}">
             <a class="btn btn-warning btn-edit" href="/gather/updateGather/${gather.id}">수정</a>
-        <button class="btn btn-danger btn-delete" id="deleteBtn">삭제</button>
+            <button class="btn btn-danger btn-delete" id="deleteBtn">삭제</button>
         </c:if>
         <div class="comment-box">
             <h5>댓글</h5>
-            <form>
+            <form id="commentForm">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="댓글을 작성해보세요.">
+                    <input type="hidden" id="commentUsername" value="${username}">
+                    <input type="text" class="form-control" id="commentBody" placeholder="댓글을 작성해보세요.">
                 </div>
                 <button type="submit" class="btn btn-primary">댓글 작성</button>
             </form>
-            <div class="mt-3">
-                <div class="media mb-3">
-                    <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
-                    <div class="media-body">
-                        <h6 class="mt-0">aaa</h6>
-                        댓글 내용이 여기에 표시됩니다.
+            <div class="mt-3" id="commentsList">
+                <c:forEach items="${commentDtos}" var="comment">
+                    <div class="media mb-3" data-comment-id="${comment.id}">
+                        <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
+                        <div class="media-body">
+                            <h6 class="mt-0">${comment.username}</h6>
+                            <p class="comment-body">${comment.body}</p>
+                            <input type="text" class="form-control comment-body-edit" style="display:none;" value="${comment.body}">
+                            <c:if test="${username == comment.username}">
+                                <div class="comment-actions">
+                                    <button class="btn btn-secondary btn-sm btn-edit-comment" data-comment-id="${comment.id}">수정</button>
+                                    <button class="btn btn-primary btn-sm btn-save-comment" data-comment-id="${comment.id}" style="display:none;">저장</button>
+                                    <button class="btn btn-danger btn-sm btn-delete-comment" data-comment-id="${comment.id}">삭제</button>
+                                </div>
+                            </c:if>
+                        </div>
                     </div>
-                </div>
+                </c:forEach>
             </div>
         </div>
     </div>
@@ -112,8 +126,6 @@
         <button class="btn btn-like" id="likeBtn" data-gather-id="${gather.id}"><i class="fas fa-heart"></i> ${gather.likes}</button>
         <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
-
-
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -154,57 +166,164 @@
                     });
             }
         });
-    });
 
-
-    document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('statusBtn').addEventListener('click', () => {
-            const gatherId = ${gather.id}
-                fetch('/api/updateStatus/' + gatherId, {
-                    method: 'PUT',
+            const gatherId = ${gather.id};
+            fetch('/api/updateStatus/' + gatherId, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                })
+                .then(data => {
+                    document.getElementById('statusBtn').classList.remove('btn-status');
+                    document.getElementById('statusBtn').classList.add('btn-status-complete');
+                    document.getElementById('statusBtn').innerText = '모집완료';
+                })
+                .catch(error => {
+                    alert('Error updating status: ' + error.message);
+                });
+        });
+
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const gatherId = this.getAttribute('data-gather-id');
+            $.ajax({
+                type: 'POST',
+                url: '/api/likeGather',
+                data: { id: gatherId },
+                success: function(response) {
+                    document.getElementById('likeBtn').innerHTML = '<i class="fas fa-heart"></i> ' + response;
+                },
+                error: function(error) {
+                    console.error('좋아요 업데이트 실패: ', error);
+                }
+            });
+        });
+
+        document.getElementById('commentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const gatherId = ${gather.id};
+            const commentBody = document.getElementById('commentBody').value;
+            const commentUsername = document.getElementById('commentUsername').value;
+            if (commentBody.trim() === '') {
+                alert('댓글을 입력해주세요.');
+                return;
+            }
+
+            fetch('/api/gather/' + gatherId + '/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ body: commentBody, username: commentUsername, gatherId: gatherId })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const commentList = document.getElementById('commentsList');
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('media', 'mb-3');
+                    newComment.setAttribute('data-comment-id', data.id);
+                    newComment.innerHTML = `
+            <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
+            <div class="media-body">
+                <h6 class="mt-0">${data.username}</h6>
+                <p class="comment-body">${data.body}</p>
+                <input type="text" class="form-control comment-body-edit" style="display:none;" value="${data.body}">
+                <div class="comment-actions">
+                    <button class="btn btn-secondary btn-sm btn-edit-comment" data-comment-id="${data.id}">수정</button>
+                    <button class="btn btn-primary btn-sm btn-save-comment" data-comment-id="${data.id}" style="display:none;">저장</button>
+                    <button class="btn btn-danger btn-sm btn-delete-comment" data-comment-id="${data.id}">삭제</button>
+                </div>
+            </div>
+        `;
+                    commentList.prepend(newComment);
+                    document.getElementById('commentBody').value = '';
+                })
+                .catch(error => {
+                    console.error('댓글 작성 실패:', error);
+                    alert('댓글 작성에 실패했습니다: ' + error.message);
+                });
+        });
+
+
+        document.getElementById('commentsList').addEventListener('click', function(event) {
+            if (event.target.classList.contains('btn-edit-comment')) {
+                const commentElement = event.target.closest('.media');
+                const commentBodyElement = commentElement.querySelector('.comment-body');
+                const commentBodyEditElement = commentElement.querySelector('.comment-body-edit');
+                const saveButton = commentElement.querySelector('.btn-save-comment');
+
+                commentBodyElement.style.display = 'none';
+                commentBodyEditElement.style.display = 'block';
+                saveButton.style.display = 'inline-block';
+            } else if (event.target.classList.contains('btn-save-comment')) {
+                const commentElement = event.target.closest('.media');
+                const commentId = event.target.getAttribute('data-comment-id');
+                const commentBodyEditElement = commentElement.querySelector('.comment-body-edit');
+                const commentBody = commentBodyEditElement.value;
+                const commentUsername = document.getElementById('commentUsername').value; // username 가져오기
+                const gatherId = ${gather.id}; // gatherId 가져오기
+
+                fetch('/api/gather/comments/' + commentId, {
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
                     },
+                    body: JSON.stringify({ id: commentId, body: commentBody, username: commentUsername, gatherId: gatherId }) // 필요한 모든 필드 추가
                 })
                     .then(response => {
-                        if (response.ok) {
-                            return response.text();
-                        } else {
+                        if (!response.ok) {
                             throw new Error('Network response was not ok.');
                         }
+                        return response.json();
                     })
                     .then(data => {
-                        document.getElementById('statusBtn').classList.remove('btn-status');
-                        document.getElementById('statusBtn').classList.add('btn-status-complete');
-                        document.getElementById('statusBtn').innerText = '모집완료';
+                        const commentBodyElement = commentElement.querySelector('.comment-body');
+                        commentBodyElement.innerText = data.body;
+
+                        commentBodyElement.style.display = 'block';
+                        commentBodyEditElement.style.display = 'none';
+                        event.target.style.display = 'none';
                     })
                     .catch(error => {
-                        alert('Error updating status: ' + error.message);
+                        console.error('댓글 수정 실패:', error);
+                        alert('댓글 수정에 실패했습니다: ' + error.message);
                     });
-        });
-    });
-
-
-
-
-
-
-    document.getElementById('likeBtn').addEventListener('click', function() {
-        const gatherId = this.getAttribute('data-gather-id');
-        $.ajax({
-            type: 'POST',
-            url: '/api/likeGather',
-            data: { id: gatherId },
-            success: function(response) {
-                document.getElementById('likeBtn').innerHTML = '<i class="fas fa-heart"></i> ' + response;
-            },
-            error: function(error) {
-                console.error('좋아요 업데이트 실패: ', error);
+            } else if (event.target.classList.contains('btn-delete-comment')) {
+                const commentId = event.target.getAttribute('data-comment-id');
+                if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+                    fetch('/api/gather/comments/' + commentId, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok.');
+                            }
+                            event.target.closest('.media').remove();
+                        })
+                        .catch(error => {
+                            console.error('댓글 삭제 실패:', error);
+                            alert('댓글 삭제에 실패했습니다: ' + error.message);
+                        });
+                }
             }
         });
     });
-
-
 </script>
 </body>
 </html>

@@ -1,15 +1,11 @@
 package com.group.studycafe.dto;
 
 import com.group.studycafe.domain.Comment;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@ToString
+@Data
 public class CommentDto {
     private Long id;
     private Long gatherId;

@@ -39,14 +39,21 @@ public class CommentService {
     @Transactional
     public CommentDto create(Long gatherId, CommentDto dto) {
         // 1. 게시글 조회 및 예외 발생
-        Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("댓글 생성 실패! " + "대상 게시글이 없습니다."));
+        Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("댓글 생성 실패! 대상 게시글이 없습니다."));
+
         // 2. 댓글 엔티티 생성
         Comment comment = Comment.createComment(dto, gather);
+
         // 3. 댓글 엔티티를 DB에 저장
         Comment created = commentRepository.save(comment);
+
+        // 저장된 댓글 확인
+        System.out.println("Created comment: " + created); // 로그 추가
+
         // 4. DTO로 변환해 반환
         return CommentDto.createCommentDto(created);
     }
+
     @Transactional
     public CommentDto update(Long id, CommentDto dto) {
         // 1. 댓글 조회 및 예외 발생
