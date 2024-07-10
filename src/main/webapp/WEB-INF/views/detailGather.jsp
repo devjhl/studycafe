@@ -225,14 +225,12 @@
                 body: JSON.stringify({ body: commentBody, username: commentUsername, gatherId: gatherId })
             })
                 .then(response => {
-                    console.log('서버 응답 수신:', response);
                     if (!response.ok) {
-                        return response.json().then(error => { throw new Error(error.message); });
+                        return response.json().then(error => { throw new Error(error.error); });
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('댓글 작성 성공:', data);
                     const commentList = document.getElementById('commentsList');
                     const newComment = document.createElement('div');
                     newComment.classList.add('media', 'mb-3');

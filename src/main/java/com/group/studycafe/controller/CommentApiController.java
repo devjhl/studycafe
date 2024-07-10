@@ -25,11 +25,15 @@ public class CommentApiController {
 
     // 2. 댓글 생성
     @PostMapping("/{gatherId}/comments")
-    public ResponseEntity<CommentDto> create(@PathVariable Long gatherId, @RequestBody CommentDto dto) {
-        System.out.println("Received comment: " + dto); // 로그 추가
-        CommentDto createdDto = commentService.create(gatherId, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(createdDto);
+    public ResponseEntity<?> create(@PathVariable Long gatherId, @RequestBody CommentDto dto) {
+        try {
+            CommentDto createdDto = commentService.create(gatherId, dto);
+            return ResponseEntity.status(HttpStatus.OK).body(createdDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
     }
+
 
     // 3. 댓글 수정
     @PatchMapping("/comments/{id}")
