@@ -1,6 +1,7 @@
 package com.group.studycafe.service;
 
 import com.group.studycafe.domain.Gather;
+import com.group.studycafe.repository.CommentRepository;
 import com.group.studycafe.repository.GatherRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,12 +18,14 @@ public class GatherService {
 
     private static final Logger logger = LoggerFactory.getLogger(GatherService.class);
     private final GatherRepository gatherRepository;
+    private final CommentRepository commentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public GatherService(GatherRepository gatherRepository) {
+    public GatherService(GatherRepository gatherRepository, CommentRepository commentRepository) {
         this.gatherRepository = gatherRepository;
+        this.commentRepository = commentRepository;
     }
 
     public Page<Gather> findAll(Pageable pageable) {
@@ -81,5 +84,9 @@ public class GatherService {
     @Transactional
     public void deleteGather(Long id) {
         gatherRepository.deleteById(id);
+    }
+
+    public long count(Long gatherId) {
+        return commentRepository.countByGatherId(gatherId);
     }
 }

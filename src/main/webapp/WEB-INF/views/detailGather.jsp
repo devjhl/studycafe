@@ -104,6 +104,7 @@
                         <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
                         <div class="media-body">
                             <h6 class="mt-0">${comment.username}</h6>
+                            <p class="text-muted"><fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
                             <p class="comment-body">${comment.body}</p>
                             <input type="text" class="form-control comment-body-edit" style="display:none;" value="${comment.body}">
                             <c:if test="${username == comment.username}">
@@ -249,6 +250,10 @@
                     username.classList.add('mt-0');
                     username.innerText = data.username;
 
+                    const commentDate = document.createElement('p');
+                    commentDate.classList.add('text-muted');
+                    commentDate.innerText = new Date(data.createdAt).toLocaleString();
+
                     const commentBodyP = document.createElement('p');
                     commentBodyP.classList.add('comment-body');
                     commentBodyP.innerText = data.body;
@@ -283,6 +288,7 @@
                     commentActions.appendChild(deleteButton);
 
                     mediaBody.appendChild(username);
+                    mediaBody.appendChild(commentDate);
                     mediaBody.appendChild(commentBodyP);
                     mediaBody.appendChild(commentBodyEdit);
                     mediaBody.appendChild(commentActions);

@@ -2,6 +2,7 @@ package com.group.studycafe.controller;
 
 import com.group.studycafe.config.UserInfo;
 import com.group.studycafe.domain.Gather;
+import com.group.studycafe.domain.GatherWithCommentCount;
 import com.group.studycafe.domain.Status;
 import com.group.studycafe.dto.CommentDto;
 import com.group.studycafe.service.CommentService;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RequestMapping("/gather")
@@ -52,8 +54,16 @@ public class GatherController {
                     gatherPage = gatherService.findAll(pageable);
                 }
             }
+
+            List<GatherWithCommentCount> gatherWithCommentCounts = gatherPage.getContent().stream()
+                    .map(gather -> {
+                        Long commentCount = commentService.countCommentsByGatherId(gather.getId());
+                        return new GatherWithCommentCount(gather, commentCount);
+                    })
+                    .collect(Collectors.toList());
+
             model.addAttribute("loginUsername", loginUsername);
-            model.addAttribute("gatherList", gatherPage.getContent());
+            model.addAttribute("gatherList", gatherWithCommentCounts);
             model.addAttribute("user", loginUsername);
             model.addAttribute("totalPages", gatherPage.getTotalPages());
             model.addAttribute("currentPage", page);
@@ -65,6 +75,8 @@ public class GatherController {
             return "error"; // 에러 페이지로 리다이렉트
         }
     }
+
+
 
     @GetMapping("/{id}")
     public String detailGather(@PathVariable Long id, Model model) {

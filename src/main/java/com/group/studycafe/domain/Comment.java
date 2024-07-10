@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @ToString
@@ -27,6 +29,9 @@ public class Comment {
     @Column
     private String body;
 
+    @Column
+    private LocalDateTime createdAt;
+
     public static Comment createComment(CommentDto dto, Gather gather) {
         if (dto.getId() != null)
             throw new IllegalArgumentException("댓글 생성 실패! 댓글의 id가 없어야 합니다.");
@@ -36,7 +41,8 @@ public class Comment {
                 dto.getId(),
                 gather,
                 dto.getUsername(),
-                dto.getBody()
+                dto.getBody(),
+                LocalDateTime.now()
         );
     }
 

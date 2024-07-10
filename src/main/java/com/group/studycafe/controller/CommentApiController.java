@@ -44,4 +44,10 @@ public class CommentApiController {
         CommentDto deleteDto = commentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(deleteDto);
     }
+
+    // 5. 댓글 수
+    @GetMapping("/{gatherId}/commentCount")
+    public long getCommentCount(@PathVariable Long gatherId) {
+        return commentService.countCommentsByGatherId(gatherId);
+    }
 }

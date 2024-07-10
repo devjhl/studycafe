@@ -96,21 +96,21 @@
         <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
     </c:if>
     <div class="clearfix"></div>
-    <c:forEach var="gather" items="${gatherList}">
-        <div class="study-card" onclick="goToDetail(${gather.id})">
+    <c:forEach var="gatherWithCommentCount" items="${gatherList}">
+        <div class="study-card" onclick="goToDetail(${gatherWithCommentCount.gather.id})">
             <div class="d-flex justify-content-between">
                 <h5 class="card-title">
-                    <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status}</button>
-                        ${gather.title}
+                    <button class="btn ${gatherWithCommentCount.gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gatherWithCommentCount.gather.id}">${gatherWithCommentCount.gather.status}</button>
+                        ${gatherWithCommentCount.gather.title}
                 </h5>
-                <small class="text-muted"><strong>${gather.username}</strong> <fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
+                <small class="text-muted"><strong>${gatherWithCommentCount.gather.username}</strong> <fmt:formatDate value="${gatherWithCommentCount.gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
             </div>
-            <p class="card-text">${gather.content}</p>
+            <p class="card-text">${gatherWithCommentCount.gather.content}</p>
             <div class="footer mt-3">
                 <div>
-                    <span class="mr-2"><i class="fas fa-heart"></i> ${gather.likes}</span>
-                    <span class="mr-2"><i class="fas fa-comment"></i> 0</span>
-                    <span><i class="fas fa-eye"></i> ${gather.views}</span>
+                    <span class="mr-2"><i class="fas fa-heart"></i> ${gatherWithCommentCount.gather.likes}</span>
+                    <span class="mr-2"><i class="fas fa-comment"></i> ${gatherWithCommentCount.commentCount}</span>
+                    <span><i class="fas fa-eye"></i> ${gatherWithCommentCount.gather.views}</span>
                 </div>
             </div>
         </div>

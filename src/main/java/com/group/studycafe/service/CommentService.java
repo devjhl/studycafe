@@ -58,4 +58,8 @@ public class CommentService {
         commentRepository.delete(target);
         return CommentDto.createCommentDto(target);
     }
+
+    public long countCommentsByGatherId(Long gatherId) {
+        return commentRepository.countByGatherId(gatherId);
+    }
 }
