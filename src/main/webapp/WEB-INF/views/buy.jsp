@@ -246,7 +246,7 @@
             updateTotalPrice();
         });
 
-        $('#pay_btn').on('click', async function() {
+        $('#pay_btn').on('click', function() {
             const totalPrice = parseInt($('#total_price').text());
             if (isNaN(totalPrice) || totalPrice <= 0) {
                 alert("결제할 금액이 없습니다.");
@@ -278,52 +278,63 @@
                 }
             };
 
-            try {
-                const response = await BootPay.request(requestData);
-                console.log('Bootpay response:', response);
+            BootPay.request(requestData)
+                .error(function (data) {
+                    console.error('결제 오류:', data);
+                    alert('결제 요청에 실패했습니다. 다시 시도해주세요.');
+                })
+                .cancel(function (data) {
+                    console.log('결제 취소:', data);
+                    alert('결제가 취소되었습니다.');
+                })
+                .ready(function (data) {
+                    console.log('결제 준비 완료:', data);
+                })
+                .confirm(function (data) {
+                    console.log('결제 승인 요청:', data);
+                    BootPay.transactionConfirm(data); // 결제 승인
+                })
+                .close(function (data) {
+                    console.log('결제 창 닫힘:', data);
+                })
+                .done(function (data) {
+                    console.log('결제 완료:', data);
+                    alert('결제 완료되었습니다.');
 
-                if (response && response.status) {
-                    console.log('Bootpay response status:', response.status);
+                    const orderData = {
+                        username: userInfo.username,
+                        email: userInfo.email,
+                        phone: userInfo.phone,
+                        total_price: totalPrice,
+                        created_at: new Date().toISOString()
+                    };
 
-                    if (response.status === 'done') {
-                        alert("결제 완료되었습니다.");
-
-                        const orderData = {
-                            username: userInfo.username,
-                            email: userInfo.email,
-                            phone: userInfo.phone,
-                            total_price: parseInt(totalPrice),
-                            created_at: new Date().toISOString()
-                        };
-
-                        const orderResponse = await fetch('/api/v1/order', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(orderData)
-                        });
-
-                        if (orderResponse.ok) {
-                            const data = await orderResponse.json();
+                    fetch('/api/v1/order', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(orderData)
+                    })
+                        .then(orderResponse => {
+                            if (orderResponse.ok) {
+                                return orderResponse.json();
+                            } else {
+                                return orderResponse.text().then(errorText => {
+                                    throw new Error(`주문 저장 중 오류가 발생했습니다: ${errorText}`);
+                                });
+                            }
+                        })
+                        .then(data => {
                             console.log('Order saved:', data);
                             window.location.href = '/orderConfirmation';
-                        } else {
-                            const errorText = await orderResponse.text();
-                            throw new Error(`주문 저장 중 오류가 발생했습니다: ${errorText}`);
-                        }
-                    } else if (response.status === 'cancel') {
-                        alert("결제가 취소되었습니다.");
-                    } else {
-                        console.error('Unexpected status:', response.status);
-                    }
-                } else {
-                    console.error('Bootpay response status is undefined or invalid:', response);
-                }
-            } catch (error) {
-                console.error('Error during payment request:', error);
-                alert('결제 요청에 실패했습니다. 다시 시도해주세요.');
-            }
+                        })
+                        .catch(error => {
+                            console.error('주문 저장 오류:', error);
+                            alert('주문 저장에 실패했습니다. 다시 시도해주세요.');
+                        });
+                });
         });
     });
+
 </script>
 
 </body>

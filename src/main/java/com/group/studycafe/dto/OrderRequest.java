@@ -1,14 +1,26 @@
 package com.group.studycafe.dto;
 
+import com.group.studycafe.domain.Order;
 import lombok.Data;
 
 import java.util.Date;
-
 @Data
 public class OrderRequest {
     private String username;
     private String email;
     private String phone;
     private int totalPrice;
-    private Date createdAt;
+    private String createdAt;
+
+    // Getters and Setters
+
+    public Order toOrder() {
+        Order order = new Order();
+        order.setUsername(this.username);
+        order.setEmail(this.email);
+        order.setPhone(this.phone);
+        order.setTotalPrice(this.totalPrice);
+        order.setCreatedAt(this.createdAt);
+        return order;
+    }
 }

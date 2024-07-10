@@ -2,20 +2,19 @@ package com.group.studycafe.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.Date;
 
+import java.util.Date;
 @Data
 @Entity
-@Table(name = "orders")
+@Table(name = "`orders`")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String email;
     private String phone;
-    private int total_price;
-    private Date created_at;
-    // getters and setters
+    private int totalPrice;
+    private String createdAt;
 }
