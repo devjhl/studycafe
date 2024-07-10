@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface GatherRepository extends JpaRepository<Gather, Long> {
     Page<Gather> findAll(Pageable pageable);
@@ -31,4 +33,6 @@ public interface GatherRepository extends JpaRepository<Gather, Long> {
     @Transactional
     @Query("UPDATE Gather g SET g.views = g.views + 1 WHERE g.id = :id")
     void incrementViewCount(@Param("id") Long id);
+
+    List<Gather> findAllByOrderByCommentCountDesc();
 }

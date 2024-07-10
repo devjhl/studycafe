@@ -16,4 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT COUNT(c) FROM Comment c WHERE c.gather.id = :gatherId")
     long countByGatherId(@Param("gatherId") Long gatherId);
+
+
 }

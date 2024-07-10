@@ -62,10 +62,22 @@
             background-color: #d3d3d3;
             color: #fff;
         }
+        .active-sort {
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
     </style>
     <script>
         function goToDetail(id) {
             location.href = '${pageContext.request.contextPath}/gather/' + id;
+        }
+
+        function sortGathers(sort) {
+            let url = new URL(window.location.href);
+            url.searchParams.set('sort', sort);
+            window.location.href = url.toString();
         }
     </script>
 </head>
@@ -73,24 +85,24 @@
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <div class="container mt-5">
     <nav class="nav nav-tabs">
-        <a class="nav-item nav-link ${status == null || status == '' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=">전체</a>
-        <a class="nav-item nav-link ${status == '모집중' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집중">모집중</a>
-        <a class="nav-item nav-link ${status == '모집완료' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집완료">모집완료</a>
+        <a class="nav-item nav-link ${status == null || status == '' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=&sort=${sort}">전체</a>
+        <a class="nav-item nav-link ${status == '모집중' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집중&sort=${sort}">모집중</a>
+        <a class="nav-item nav-link ${status == '모집완료' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집완료&sort=${sort}">모집완료</a>
     </nav>
     <div class="container mt-5">
         <form action="/gather" method="get" class="input-group mb-3">
             <input type="text" class="form-control" name="keyword" placeholder="관심 스터디를 검색해보세요!" value="${keyword}">
             <input type="hidden" name="status" value="${status}">
+            <input type="hidden" name="sort" value="${sort}">
             <div class="input-group-append">
                 <button class="btn btn-success" type="submit">검색</button>
             </div>
         </form>
     </div>
     <div class="btn-group mb-3" role="group" aria-label="Sorting buttons">
-        <button type="button" class="btn btn-outline-secondary">최신순</button>
-        <button type="button" class="btn btn-outline-secondary">정확도순</button>
-        <button type="button" class="btn btn-outline-secondary">댓글많은순</button>
-        <button type="button" class="btn btn-outline-secondary">좋아요순</button>
+        <button type="button" class="btn btn-outline-secondary ${sort == 'date' ? 'active-sort' : ''}" onclick="sortGathers('date')">최신순</button>
+        <button type="button" class="btn btn-outline-secondary ${sort == 'comments' ? 'active-sort' : ''}" onclick="sortGathers('comments')">댓글많은순</button>
+        <button type="button" class="btn btn-outline-secondary ${sort == 'likes' ? 'active-sort' : ''}" onclick="sortGathers('likes')">좋아요순</button>
     </div>
     <c:if test="${loginUsername != null}">
         <button class="btn btn-primary float-right mb-3" onclick="location.href='/gather/write'">글쓰기</button>
@@ -119,17 +131,17 @@
         <ul class="pagination">
             <!-- 이전 페이지 버튼 수정 -->
             <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
-                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}&status=${status}">이전</a>
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}&status=${status}&sort=${sort}">이전</a>
             </li>
             <!-- 페이지 번호 버튼 수정 -->
             <c:forEach var="i" begin="1" end="${totalPages}">
                 <li class="page-item ${currentPage + 1 == i ? 'active' : ''}">
-                    <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}&status=${status}">${i}</a>
+                    <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}&status=${status}&sort=${sort}">${i}</a>
                 </li>
             </c:forEach>
             <!-- 다음 페이지 버튼 수정 -->
             <li class="page-item ${currentPage + 1 >= totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}&status=${status}">다음</a>
+                <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}&status=${status}&sort=${sort}">다음</a>
             </li>
         </ul>
     </nav>

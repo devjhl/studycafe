@@ -33,11 +33,13 @@ public class GatherController {
     public String gather(Model model,
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam(required = false) String keyword,
-                         @RequestParam(required = false) String status) {
+                         @RequestParam(required = false) String status,
+                         @RequestParam(defaultValue = "date") String sort) {
         String loginUsername = UserInfo.getCurrentUsername();
 
         try {
-            Pageable pageable = PageRequest.of(page, 10, Sort.by("date").descending());
+            Sort sorting = Sort.by(sort.equals("comments") ? "commentCount" : sort).descending();
+            Pageable pageable = PageRequest.of(page, 10, sorting);
             Page<Gather> gatherPage;
 
             if (keyword != null && !keyword.isEmpty()) {
@@ -62,12 +64,17 @@ public class GatherController {
                     })
                     .collect(Collectors.toList());
 
+            if (sort.equals("comments")) {
+                gatherWithCommentCounts.sort((g1, g2) -> g2.getCommentCount().compareTo(g1.getCommentCount()));
+            }
+
             model.addAttribute("loginUsername", loginUsername);
             model.addAttribute("gatherList", gatherWithCommentCounts);
             model.addAttribute("user", loginUsername);
             model.addAttribute("totalPages", gatherPage.getTotalPages());
             model.addAttribute("currentPage", page);
             model.addAttribute("status", status);
+            model.addAttribute("sort", sort);
             return "list";
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,8 +82,6 @@ public class GatherController {
             return "error"; // 에러 페이지로 리다이렉트
         }
     }
-
-
 
     @GetMapping("/{id}")
     public String detailGather(@PathVariable Long id, Model model) {

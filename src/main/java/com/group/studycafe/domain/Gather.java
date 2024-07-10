@@ -23,6 +23,7 @@ public class Gather {
     private int views;
     private int likes;
     private String status; // 모집중 , 모집완료
+    private int commentCount; // 댓글수
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;

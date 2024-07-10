@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class GatherService {
 
@@ -88,5 +90,9 @@ public class GatherService {
 
     public long count(Long gatherId) {
         return commentRepository.countByGatherId(gatherId);
+    }
+
+    public List<Gather> findAllByCommentCountDesc() {
+        return gatherRepository.findAllByOrderByCommentCountDesc();
     }
 }
