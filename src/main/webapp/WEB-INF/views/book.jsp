@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -40,17 +39,13 @@
             cursor: not-allowed;
         }
         .seat-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
             justify-content: center;
             margin-top: 20px;
             border: 1px solid #000;
             padding: 10px;
-        }
-        .row {
-            width: 100%;
-            display: flex;
-            justify-content: center;
         }
         footer {
             background-color: #f8f9fa;
@@ -119,33 +114,20 @@
             .then(response => response.json())
             .then(data => {
                 const seatContainer = $('#seatContainer');
-                const rows = 6;
-                const cols = 8;
-                let seatIndex = 0;
 
-                for (let i = 0; i < rows; i++) {
-                    seatContainer.append('<div class="row"></div>');
-                }
-
-                seatContainer.children('.row').each(function () {
-                    for (let j = 0; j < cols; j++) {
-                        if (seatIndex < data.length) {
-                            const seat = data[seatIndex];
-                            const seatDiv = $('<div></div>')
-                                .addClass('seat')
-                                .text(seat.id)
-                                .attr('data-seat-id', seat.id);
-                            if (seat.reserved) {
-                                if (Number(seat.userId) === Number(userInfo.userId)) {
-                                    seatDiv.addClass('reserved');
-                                } else {
-                                    seatDiv.addClass('unavailable');
-                                }
-                            }
-                            $(this).append(seatDiv);
-                            seatIndex++;
+                data.forEach(seat => {
+                    const seatDiv = $('<div></div>')
+                        .addClass('seat')
+                        .text(seat.id)
+                        .attr('data-seat-id', seat.id);
+                    if (seat.reserved) {
+                        if (Number(seat.userId) === Number(userInfo.userId)) {
+                            seatDiv.addClass('reserved');
+                        } else {
+                            seatDiv.addClass('unavailable');
                         }
                     }
+                    seatContainer.append(seatDiv);
                 });
 
                 // 좌석 클릭 이벤트 바인딩
