@@ -20,4 +20,8 @@ public class OrderService {
     public Order findOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
+
+    public Order findOrderByUsername(String username) {
+        return orderRepository.findByUsername(username);
+    }
 }

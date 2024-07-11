@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -94,7 +95,6 @@
 <div class="container mt-5 content">
     <h2 class="text-center">좌석 배치도</h2>
     <div class="seat-container" id="seatContainer">
-        <!-- 좌석 데이터는 JavaScript로 로드됩니다. -->
     </div>
     <div class="text-center mt-4">
         <button class="btn btn-primary" id="reserveButton">예약하기</button>
@@ -108,11 +108,12 @@
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script>
-        let userInfo = {
+<script>
+    let userInfo = {
         userId: '${user.id}'
     };
-        $(document).ready(function() {
+    let hasOrder = ${hasOrder};
+    $(document).ready(function() {
         // 좌석 데이터를 서버에서 로드
         fetch('/api/v1/seats')
             .then(response => response.json())
@@ -122,12 +123,10 @@
                 const cols = 8;
                 let seatIndex = 0;
 
-                // Initialize rows
                 for (let i = 0; i < rows; i++) {
                     seatContainer.append('<div class="row"></div>');
                 }
 
-                // Fill seats
                 seatContainer.children('.row').each(function () {
                     for (let j = 0; j < cols; j++) {
                         if (seatIndex < data.length) {
@@ -151,6 +150,10 @@
 
                 // 좌석 클릭 이벤트 바인딩
                 $('.seat').on('click', function () {
+                    if (!hasOrder) {
+                        alert('이용권 구매 후 이용해주세요.');
+                        return;
+                    }
                     if ($(this).hasClass('reserved') || $(this).hasClass('unavailable')) {
                         alert('이 좌석은 선택할 수 없습니다.');
                         return;
@@ -162,36 +165,40 @@
 
         // 예약 버튼 클릭 이벤트
         $('#reserveButton').on('click', async function() {
-        const selectedSeat = $('.seat.selected').first();
-        if (!selectedSeat.length) {
-        alert('예약할 좌석을 선택하세요.');
-        return;
-    }
+            if (!hasOrder) {
+                alert('이용권 구매 후 이용해주세요.');
+                return;
+            }
+            const selectedSeat = $('.seat.selected').first();
+            if (!selectedSeat.length) {
+                alert('예약할 좌석을 선택하세요.');
+                return;
+            }
 
-        const reservationRequest = {
-        seatId: selectedSeat.data('seat-id'),
-        userId: userInfo.userId
-    };
+            const reservationRequest = {
+                seatId: selectedSeat.data('seat-id'),
+                userId: userInfo.userId
+            };
 
-        try {
-        const response = await fetch('/api/v1/seats/reserve', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(reservationRequest)
-    });
+            try {
+                const response = await fetch('/api/v1/seats/reserve', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(reservationRequest)
+                });
 
-        if (response.ok) {
-        selectedSeat.removeClass('selected').addClass('reserved');
-        alert('좌석이 예약되었습니다.');
-    } else {
-        const errorText = await response.text();
-        alert('예약 실패: ' + errorText);
-    }
-    } catch (error) {
-        console.error('Error during reservation request:', error);
-        alert('예약 요청에 실패했습니다. 다시 시도해주세요.');
-    }
-    });
+                if (response.ok) {
+                    selectedSeat.removeClass('selected').addClass('reserved');
+                    alert('좌석이 예약되었습니다.');
+                } else {
+                    const errorText = await response.text();
+                    alert('예약 실패: ' + errorText);
+                }
+            } catch (error) {
+                console.error('Error during reservation request:', error);
+                alert('예약 요청에 실패했습니다. 다시 시도해주세요.');
+            }
+        });
     });
 </script>
 </body>

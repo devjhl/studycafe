@@ -76,6 +76,9 @@
                 </div>
                 <button type="submit" class="btn btn-primary">로그인</button>
                 <a href="${pageContext.request.contextPath}/signup" class="signup-link">회원가입</a>
+                <p><strong>계정<br>
+                    ID : admin<br>
+                    PASSWORD : asdf1234</strong></p>
             </form>
         </div>
     </div>
