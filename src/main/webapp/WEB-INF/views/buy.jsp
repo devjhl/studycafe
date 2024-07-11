@@ -193,9 +193,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     let userInfo = {
-        username: '${user.username}', // 서버에서 제공받은 사용자 이름
-        email: '${user.email}', // 서버에서 제공받은 이메일
-        phone: '${user.phone}' // 서버에서 제공받은 전화번호
+        username: '${user.username}',
+        email: '${user.email}',
+        phone: '${user.phone}'
     };
 
     $(document).ready(function() {
@@ -324,7 +324,6 @@
                             }
                         })
                         .then(data => {
-                            alert(`Order saved: ${JSON.stringify(data)}`);
                             const id = data.id;
                             window.location.href = '/api/v1/order/orderConfirmation/'+id;
                         })

@@ -158,6 +158,10 @@
                         alert('이 좌석은 선택할 수 없습니다.');
                         return;
                     }
+                    if ($('.seat.selected').length > 0 && !$(this).hasClass('selected')) {
+                        alert('하나의 좌석만 선택할 수 있습니다.');
+                        return;
+                    }
                     $(this).toggleClass('selected');
                 });
             })
