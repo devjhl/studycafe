@@ -5,6 +5,8 @@ import com.group.studycafe.domain.OrderTicketNames;
 import com.group.studycafe.dto.OrderRequest;
 import com.group.studycafe.service.OrderService;
 import com.group.studycafe.service.OrderTicketNamesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class OrderController {
 
     @Autowired
     private OrderTicketNamesService orderTicketNamesService;
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
 
     @PostMapping
     @ResponseBody
@@ -53,15 +58,21 @@ public class OrderController {
         }
     }
 
+
     @GetMapping("/orderConfirmation")
     public String getOrderConfirmation(@RequestParam Long orderId, Model model) {
+        logger.debug("Getting order confirmation for orderId: {}", orderId);
         Order order = orderService.findById(orderId);
-        List<OrderTicketNames> orderTicketNames = orderTicketNamesService.findByOrderId(orderId);
+        List<OrderTicketNames> orderTicketNames = orderTicketNamesService.findOrderTicketsByOrderId(orderId);
 
         if (order != null) {
             model.addAttribute("order", order);
             model.addAttribute("orderTicketNames", orderTicketNames);
+        } else {
+            logger.warn("Order not found for orderId: {}", orderId);
         }
+        logger.debug("Order: {}", order);
+        logger.debug("OrderTicketNames: {}", orderTicketNames);
         return "orderConfirmation";
     }
 }

@@ -4,6 +4,7 @@ import com.group.studycafe.domain.Order;
 import com.group.studycafe.domain.OrderTicketNames;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class OrderRequest {
         order.setEmail(this.email);
         order.setPhone(this.phone);
         order.setTotal_price(this.total_price);
-        order.setCreatedAt(this.createdAt);
+        order.setCreatedAt(LocalDateTime.parse(this.createdAt));
 
         List<OrderTicketNames> orderTickets = new ArrayList<>();
         for (String ticketName : this.ticketNames) {
@@ -46,7 +47,7 @@ public class OrderRequest {
         orderRequest.setEmail(order.getEmail());
         orderRequest.setPhone(order.getPhone());
         orderRequest.setTotal_price(order.getTotal_price());
-        orderRequest.setCreatedAt(order.getCreatedAt());
+        orderRequest.setCreatedAt(String.valueOf(order.getCreatedAt()));
 
         List<String> ticketNames = new ArrayList<>();
         for (OrderTicketNames orderTicket : order.getOrderTickets()) {

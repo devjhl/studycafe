@@ -13,7 +13,7 @@ public class OrderTicketNamesService {
 
     private final OrderTicketRepository orderTicketRepository;
 
-    public List<OrderTicketNames> findByOrderId(Long order_id) {
-        return orderTicketRepository.findByOrderId(order_id);
+    public List<OrderTicketNames> findOrderTicketsByOrderId(Long orderId) {
+        return orderTicketRepository.findByOrderId(orderId);
     }
 }
