@@ -9,7 +9,7 @@ public class OrderRequest {
     private String username;
     private String email;
     private String phone;
-    private int totalPrice;
+    private int total_price;
     private String createdAt;
 
     // Getters and Setters
@@ -19,7 +19,7 @@ public class OrderRequest {
         order.setUsername(this.username);
         order.setEmail(this.email);
         order.setPhone(this.phone);
-        order.setTotalPrice(this.totalPrice);
+        order.setTotal_price(this.total_price);
         order.setCreatedAt(this.createdAt);
         return order;
     }

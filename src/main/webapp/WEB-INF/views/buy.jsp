@@ -248,6 +248,7 @@
 
         $('#pay_btn').on('click', function() {
             const totalPrice = parseInt($('#total_price').text());
+            console.log("Total price on click: ", totalPrice); //
             if (isNaN(totalPrice) || totalPrice <= 0) {
                 alert("결제할 금액이 없습니다.");
                 return;
@@ -308,7 +309,6 @@
                         total_price: totalPrice,
                         created_at: new Date().toISOString()
                     };
-
                     fetch('/api/v1/order', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
@@ -323,10 +323,11 @@
                                 });
                             }
                         })
-                        .then(data => {
+                        /*.then(data => {
                             console.log('Order saved:', data);
-                            window.location.href = '/orderConfirmation';
-                        })
+                            const orderId = data.orderId;
+                            window.location.href = '/api/v1/order/orderConfirmation/'+orderId;
+                        })*/
                         .catch(error => {
                             console.error('주문 저장 오류:', error);
                             alert('주문 저장에 실패했습니다. 다시 시도해주세요.');

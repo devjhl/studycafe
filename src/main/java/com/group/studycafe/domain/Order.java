@@ -15,6 +15,6 @@ public class Order {
     private String username;
     private String email;
     private String phone;
-    private int totalPrice;
+    private int total_price;
     private String createdAt;
 }

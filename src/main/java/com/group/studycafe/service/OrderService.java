@@ -16,4 +16,8 @@ public class OrderService {
         Order order = orderRequest.toOrder();
         return orderRepository.save(order);
     }
+
+    public Order findOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
 }
