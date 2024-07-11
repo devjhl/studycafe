@@ -323,11 +323,11 @@
                                 });
                             }
                         })
-                        /*.then(data => {
-                            console.log('Order saved:', data);
-                            const orderId = data.orderId;
-                            window.location.href = '/api/v1/order/orderConfirmation/'+orderId;
-                        })*/
+                        .then(data => {
+                            alert(`Order saved: ${JSON.stringify(data)}`);
+                            const id = data.id;
+                            window.location.href = '/api/v1/order/orderConfirmation/'+id;
+                        })
                         .catch(error => {
                             console.error('주문 저장 오류:', error);
                             alert('주문 저장에 실패했습니다. 다시 시도해주세요.');

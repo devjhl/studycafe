@@ -10,9 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,15 +24,18 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> createOrder(@RequestBody OrderRequest orderRequest) {
         try {
-            // createdAt 값이 null이 아닌지 확인하고 설정
             if (orderRequest.getCreatedAt() == null || orderRequest.getCreatedAt().isEmpty()) {
-                orderRequest.setCreatedAt(String.valueOf(LocalDateTime.now()));
+                orderRequest.setCreatedAt(LocalDateTime.now().toString());
             }
-            System.out.println("=================================orderRequest: " + orderRequest);
-            orderService.saveOrder(orderRequest);
+
+            Order order = orderRequest.toOrder(); // OrderRequest를 Order로 변환
+            Order savedOrder = orderService.saveOrder(OrderRequest.fromOrder(order)); // Order 객체 저장
+
+            System.out.println("Saved Order ID: " + savedOrder.getId()); // 디버깅 로그 추가
 
             Map<String, String> response = new HashMap<>();
             response.put("message", "Order saved successfully");
+            response.put("id", savedOrder.getId().toString()); // 저장된 Order의 id 반환
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,12 +46,14 @@ public class OrderController {
         }
     }
 
-   /* @GetMapping("/orderConfirmation/{orderId}")
-    public String orderConfirm(@PathVariable Long orderId,Model model) {
+    @GetMapping("/orderConfirmation/{orderId}")
+    public String orderConfirm(@PathVariable Long orderId, Model model) {
         Order order = orderService.findOrderById(orderId);
-        model.addAttribute("order", order);
-       return "orderconfirm";
+        System.out.println("=============================Order"+order);
+        if (order != null) {
+            OrderRequest orderRequest = OrderRequest.fromOrder(order); // Order를 OrderRequest로 변환
+            model.addAttribute("order", orderRequest);
+        }
+        return "orderconfirm";
     }
-*/
-
 }
