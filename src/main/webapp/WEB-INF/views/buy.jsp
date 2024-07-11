@@ -254,6 +254,12 @@
                 return;
             }
 
+            let ticketTitles = [];
+            $('.selected_ticket').each(function() {
+                const title = $(this).find('.ticket_title').text();
+                ticketTitles.push(title);
+            });
+
             const requestData = {
                 price: totalPrice,
                 application_id: "668b746a6a325f79257ef328",
@@ -306,6 +312,7 @@
                         username: userInfo.username,
                         email: userInfo.email,
                         phone: userInfo.phone,
+                        ticketNames: ticketTitles,
                         total_price: totalPrice,
                         created_at: new Date().toISOString()
                     };

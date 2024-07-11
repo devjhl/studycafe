@@ -42,6 +42,12 @@
                     <p><strong>이름:</strong> <span id="username">${order.username}</span></p>
                     <p><strong>이메일:</strong> <span id="email">${order.email}</span></p>
                     <p><strong>전화번호:</strong> <span id="phone">${order.phone}</span></p>
+                    <p><strong>이용권:</strong></p>
+                    <ul>
+                        <c:forEach items="${orderTicketNames}" var="ticket">
+                            <li>${ticket.ticketNames}</li>
+                        </c:forEach>
+                    </ul>
                     <p><strong>총 결제 금액:</strong> <span id="totalPrice">${order.total_price}</span>원</p>
                 </div>
             </div>

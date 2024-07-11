@@ -12,8 +12,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Order saveOrder(OrderRequest orderRequest) {
-        Order order = orderRequest.toOrder();
+
+    public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
 
@@ -24,4 +24,10 @@ public class OrderService {
     public Order findOrderByUsername(String username) {
         return orderRepository.findByUsername(username);
     }
+
+    public Order findById(Long orderId) {
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
+
 }
