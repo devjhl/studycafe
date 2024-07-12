@@ -86,10 +86,34 @@
     </style>
 </head>
 <body>
-<jsp:include page="/WEB-INF/views/header.jsp" />
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/">Study Cafe</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/reservation">예약하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/gather">모집게시판</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">로그아웃</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/mypage">마이페이지</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <div class="container mt-5 content">
     <h2 class="text-center">좌석 배치도</h2>
     <div class="seat-container" id="seatContainer">
+        <!-- 좌석이 동적으로 추가될 자리 -->
     </div>
     <div class="text-center mt-4">
         <button class="btn btn-primary" id="reserveButton">예약하기</button>
@@ -101,18 +125,36 @@
         <div class="selected"><span></span>선택됨</div>
     </div>
 </div>
-<jsp:include page="/WEB-INF/views/footer.jsp" />
+
+<footer class="footer">
+    <div class="container">
+        <span>스터디 카페 & 스터디 모임 게시판 &copy; 2024</span>
+    </div>
+</footer>
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
     let userInfo = {
-        userId: '${user.id}'
+        userId: '1'
     };
-    let hasOrder = ${hasOrder};
+    let hasOrder = false; // 초기화
+
     $(document).ready(function() {
-        // 좌석 데이터를 서버에서 로드
+        // 서버에서 이용권 구매 여부를 확인하는 요청
+        fetch('/api/v1/checkOrder')
+            .then(response => response.json())
+            .then(data => {
+                hasOrder = data.hasOrder; // 서버에서 받아온 값을 할당
+            })
+            .catch(error => {
+                console.error('Error checking order:', error);
+            });
+
         fetch('/api/v1/seats')
             .then(response => response.json())
             .then(data => {
+                console.log('Seats data:', data); // 데이터 확인용 로그
+
                 const seatContainer = $('#seatContainer');
 
                 data.forEach(seat => {
