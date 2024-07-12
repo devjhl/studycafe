@@ -59,20 +59,14 @@ public class OrderController {
     }
 
 
-    @GetMapping("/orderConfirmation")
-    public String getOrderConfirmation(@RequestParam Long orderId, Model model) {
-        logger.debug("Getting order confirmation for orderId: {}", orderId);
+    @GetMapping("/orderConfirmation/{orderId}")
+    public String getOrderConfirmation(@PathVariable Long orderId, Model model) {
         Order order = orderService.findById(orderId);
         List<OrderTicketNames> orderTicketNames = orderTicketNamesService.findOrderTicketsByOrderId(orderId);
-
         if (order != null) {
             model.addAttribute("order", order);
             model.addAttribute("orderTicketNames", orderTicketNames);
-        } else {
-            logger.warn("Order not found for orderId: {}", orderId);
         }
-        logger.debug("Order: {}", order);
-        logger.debug("OrderTicketNames: {}", orderTicketNames);
-        return "orderConfirmation";
+        return "orderconfirm";
     }
 }

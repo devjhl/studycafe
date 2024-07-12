@@ -9,15 +9,15 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/reservation">예약하기</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#study">스터디</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/gather">모집게시판</a>
                 </li>
                 <c:choose>
                     <c:when test="${isLogin}">
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
                         </li>
                     </c:when>
                     <c:otherwise>

@@ -24,4 +24,12 @@ public class OrderTicketNames {
 
     @Column(name = "ticket_names", nullable = false)
     private String ticketNames;
+
+    @Override
+    public String toString() {
+        return "OrderTicketNames{" +
+                "id=" + id +
+                ", ticketNames='" + ticketNames + '\'' +
+                '}';
+    }
 }
