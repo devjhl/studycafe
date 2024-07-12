@@ -174,7 +174,7 @@
 
                 // 좌석 클릭 이벤트 바인딩
                 $('.seat').on('click', function () {
-                    if (!hasOrder) {
+                    if (!${hasOrders}) {
                         alert('이용권 구매 후 이용해주세요.');
                         return;
                     }
@@ -193,7 +193,7 @@
 
         // 예약 버튼 클릭 이벤트
         $('#reserveButton').on('click', async function() {
-            if (!hasOrder) {
+            if (!${hasOrders}) {
                 alert('이용권 구매 후 이용해주세요.');
                 return;
             }
