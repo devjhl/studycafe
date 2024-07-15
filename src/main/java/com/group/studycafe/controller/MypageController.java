@@ -42,7 +42,7 @@ public class MypageController {
     }
 
     @PostMapping("/profile")
-    public String updateProfile(@Valid ModifyUserDto modifyUserDto, BindingResult bindingResult, @AuthenticationPrincipal User user, Model model, RedirectAttributes redirectAttributes) {
+    public String updateProfile(@Valid ModifyUserDto modifyUserDto, BindingResult bindingResult, @AuthenticationPrincipal User user, Model model) {
         if (bindingResult.hasErrors()) {
             bindingResult.getFieldErrors().forEach(fieldError ->
                     model.addAttribute(fieldError.getField() + "Error", fieldError.getDefaultMessage())
@@ -50,10 +50,11 @@ public class MypageController {
             return "profile";
         }
 
-        userService.updateUser(modifyUserDto, user);  //
-        redirectAttributes.addFlashAttribute("message", "개인정보가 수정되었습니다.");
+        userService.updateUser(modifyUserDto, user);
+
         return "redirect:/mypage/profile";
     }
+
 
     @GetMapping("/reservations")
     public String reservations() {

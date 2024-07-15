@@ -27,7 +27,7 @@
             overflow-y: auto;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
@@ -65,7 +65,7 @@
             <div class="content">
                 <div class="signup-form">
                     <h3>개인정보수정</h3>
-                    <form action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
+                    <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="password">비밀번호</label>
                             <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" value="${userDto != null ? userDto.password : ''}" minlength="8" maxlength="20" required>
@@ -100,6 +100,32 @@
         </main>
     </div>
 </div>
+
 <jsp:include page="/WEB-INF/views/footer.jsp" />
+
+<script>
+    $(document).ready(function() {
+        $('#profileForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                success: function(data) {
+                    alert("개인정보가 수정되었습니다.");
+                    $('html').html(data);
+                },
+                error: function() {
+                    alert("수정 중 오류가 발생했습니다.");
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
