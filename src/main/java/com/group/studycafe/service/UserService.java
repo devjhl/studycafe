@@ -1,6 +1,7 @@
 package com.group.studycafe.service;
 
 import com.group.studycafe.domain.User;
+import com.group.studycafe.dto.ModifyUserDto;
 import com.group.studycafe.dto.SignupUserDto;
 import com.group.studycafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +22,48 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private User convertToUser(SignupUserDto signupUserDto) {
-        if (signupUserDto.getPassword() == null) {
-            throw new IllegalArgumentException("패스워드는 NULL일수가 없다.");
-        }
+    private <T> User convertToUser(T dto) {
+        if (dto instanceof SignupUserDto || dto instanceof ModifyUserDto) {
+            String password = null;
+            String username = null;
+            String email = null;
+            String phone = null;
 
-        User user = new User();
-        user.setUsername(signupUserDto.getUsername());
-        user.setPassword(passwordEncoder.encode(signupUserDto.getPassword()));
-        user.setEmail(signupUserDto.getEmail());
-        user.setPhone(signupUserDto.getPhone());
-        return user;
+            if (dto instanceof SignupUserDto) {
+                SignupUserDto signupUserDto = (SignupUserDto) dto;
+                password = signupUserDto.getPassword();
+                username = signupUserDto.getUsername();
+                email = signupUserDto.getEmail();
+                phone = signupUserDto.getPhone();
+            } else if (dto instanceof ModifyUserDto) {
+                ModifyUserDto modifyUserDto = (ModifyUserDto) dto;
+                password = modifyUserDto.getPassword();
+                email = modifyUserDto.getEmail();
+                phone = modifyUserDto.getPhone();
+            }
+
+            if (password == null) {
+                throw new IllegalArgumentException("패스워드는 NULL일 수 없다.");
+            }
+
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setEmail(email);
+            user.setPhone(phone);
+            return user;
+        } else {
+            throw new IllegalArgumentException("지원하지 않는 DTO 타입입니다.");
+        }
+    }
+
+    @Transactional
+    public void updateUser(ModifyUserDto modifyUserDto, User currentUser) {
+        if (modifyUserDto.getPassword() != null && !modifyUserDto.getPassword().isEmpty()) {
+            currentUser.setPassword(passwordEncoder.encode(modifyUserDto.getPassword()));
+        }
+        currentUser.setEmail(modifyUserDto.getEmail());
+        currentUser.setPhone(modifyUserDto.getPhone());
+        userRepository.save(currentUser);
     }
 }
