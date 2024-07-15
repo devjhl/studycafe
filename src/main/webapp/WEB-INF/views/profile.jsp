@@ -59,12 +59,12 @@
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">마이페이지</h1>
+                <h1 class="h2">개인정보수정</h1>
             </div>
 
             <div class="content">
                 <div class="signup-form">
-                    <h3>개인정보수정</h3>
+                    <h3></h3>
                     <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="password">비밀번호</label>

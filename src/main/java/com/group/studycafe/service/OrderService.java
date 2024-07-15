@@ -19,7 +19,6 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    // 사용자명으로 모든 주문을 찾아 리스트로 반환합니다.
     public List<Order> findOrdersByUsername(String username) {
         List<Order> orders = orderRepository.findAllByUsername(username);
         return orders;
@@ -33,4 +32,6 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElse(null);
         return order;
     }
+
+
 }

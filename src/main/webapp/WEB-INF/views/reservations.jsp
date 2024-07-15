@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -8,7 +9,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .content {
-            min-height: 80vh; /* Adjust this value as needed */
+            min-height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -25,10 +26,17 @@
         .nav-tabs {
             margin-top: 20px;
         }
+        .orders-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+        .order-card {
+            flex: 0 0 200px;
+            margin: 10px;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -55,12 +63,33 @@
                 </ul>
             </div>
         </nav>
-
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">예약/결제 정보</h1>
+            </div>
+            <div class="content">
+                <div id="reservations-content" class="orders-container">
+                    <c:forEach var="order" items="${orderList}">
+                        <div class="card mb-3 order-card">
+                            <div class="card-header">
+                                주문 ID: ${order.id} | 총 가격: ${order.total_price}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <ul>
+                                    <c:forEach var="ticket" items="${orderTicketNamesMap[order.id]}">
+                                        <li>${ticket.ticketNames}</li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </main>
     </div>
 </div>
 
-<script>
-</script>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 </body>
 </html>

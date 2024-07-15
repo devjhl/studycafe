@@ -16,4 +16,5 @@ public class OrderTicketNamesService {
     public List<OrderTicketNames> findOrderTicketsByOrderId(Long orderId) {
         return orderTicketRepository.findByOrderId(orderId);
     }
+
 }
