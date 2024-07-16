@@ -18,8 +18,4 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public Long getUserId() {
-        return user != null ? user.getId() : null;
-    }
 }

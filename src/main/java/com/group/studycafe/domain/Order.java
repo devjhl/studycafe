@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,13 +23,18 @@ public class Order {
     private String phone;
 
     @Column(name = "total_price")
-    private int total_price;
+    private BigDecimal totalPrice;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderTicketNames> orderTickets;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {
@@ -37,7 +43,7 @@ public class Order {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", total_price=" + total_price +
+                ", totalPrice=" + totalPrice +
                 '}';
     }
 }

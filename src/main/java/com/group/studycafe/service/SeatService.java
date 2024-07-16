@@ -52,4 +52,8 @@ public class SeatService {
         seat.setUser(user);
         seatRepository.save(seat);
     }
+
+    public List<Seat> findReservedSeatsByUser(Long userId) {
+        return seatRepository.findByUser_IdAndReserved(userId, true);
+    }
 }

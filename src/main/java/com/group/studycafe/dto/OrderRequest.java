@@ -4,6 +4,7 @@ import com.group.studycafe.domain.Order;
 import com.group.studycafe.domain.OrderTicketNames;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class OrderRequest {
     private String email;
     private String phone;
     private List<String> ticketNames;
-    private int total_price;
+    private BigDecimal totalPrice;
     private String createdAt;
 
     // Getters and Setters
@@ -26,7 +27,7 @@ public class OrderRequest {
         order.setUsername(this.username);
         order.setEmail(this.email);
         order.setPhone(this.phone);
-        order.setTotal_price(this.total_price);
+        order.setTotalPrice(this.totalPrice);
         order.setCreatedAt(LocalDateTime.parse(this.createdAt));
 
         List<OrderTicketNames> orderTickets = new ArrayList<>();
@@ -46,7 +47,7 @@ public class OrderRequest {
         orderRequest.setUsername(order.getUsername());
         orderRequest.setEmail(order.getEmail());
         orderRequest.setPhone(order.getPhone());
-        orderRequest.setTotal_price(order.getTotal_price());
+        orderRequest.setTotalPrice(order.getTotalPrice());
         orderRequest.setCreatedAt(String.valueOf(order.getCreatedAt()));
 
         List<String> ticketNames = new ArrayList<>();

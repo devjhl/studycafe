@@ -26,15 +26,23 @@
         .nav-tabs {
             margin-top: 20px;
         }
-        .orders-container {
+        .orders-container, .seats-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
             gap: 10px;
         }
-        .order-card {
+        .order-card, .seat-card {
             flex: 0 0 200px;
             margin: 10px;
+        }
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -65,17 +73,18 @@
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">예약/결제 정보</h1>
+                <h1 class="h2">마이페이지</h1>
             </div>
             <div class="content">
+                <div class="section-title">주문 정보</div>
                 <div id="reservations-content" class="orders-container">
                     <c:forEach var="order" items="${orderList}">
                         <div class="card mb-3 order-card">
                             <div class="card-header">
-                                주문 ID: ${order.id} | 총 가격: ${order.total_price}
+                                주문 ID: ${order.id} | 총 가격: ${order.totalPrice}
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title"></h5>
+                                <h5 class="card-title">주문 상세</h5>
                                 <ul>
                                     <c:forEach var="ticket" items="${orderTicketNamesMap[order.id]}">
                                         <li>${ticket.ticketNames}</li>
@@ -85,11 +94,30 @@
                         </div>
                     </c:forEach>
                 </div>
+
+                <div class="section-title">좌석 내역</div>
+                <div id="seats-content" class="seats-container">
+                    <c:forEach var="seat" items="${seatList}">
+                        <div class="card mb-3 seat-card">
+                            <div class="card-header">
+                                좌석 위치: ${seat.id}
+                            </div>
+                            <%--<div class="card-body">
+                                <h5 class="card-title">좌석 상세</h5>
+                                <p>예약 시간: ${seat.reservedAt}</p>
+                                <p>${seat.description}</p>
+                            </div>--%>
+                        </div>
+                    </c:forEach>
+                </div>
             </div>
         </main>
     </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
