@@ -91,7 +91,7 @@
                 </div>
                 <div class="form-group">
                     <label for="phone">전화번호</label>
-                    <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" value="${userDto != null ? userDto.phone : ''}" required>
+                    <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" value="${userDto != null ? userDto.phone : ''}" minlength="10" maxlength="11" required>
                     <div class="invalid-feedback">
                         <c:if test="${phoneError != null}">
                             ${phoneError}

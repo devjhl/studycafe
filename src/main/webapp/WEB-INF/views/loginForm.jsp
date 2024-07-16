@@ -68,11 +68,11 @@
             <form action="${pageContext.request.contextPath}/login" method="post">
                 <div class="form-group">
                     <label for="username">아이디</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" minlength="5" maxlength="13" required>
                 </div>
                 <div class="form-group">
                     <label for="password">비밀번호</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" minlength="8" maxlength="20" required>
                 </div>
                 <button type="submit" class="btn btn-primary">로그인</button>
                 <a href="${pageContext.request.contextPath}/signup" class="signup-link">회원가입</a>
