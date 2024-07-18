@@ -7,6 +7,8 @@ import com.group.studycafe.repository.CommentRepository;
 import com.group.studycafe.repository.GatherRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,7 +61,13 @@ public class CommentService {
         return CommentDto.createCommentDto(target);
     }
 
+    public Page<Comment> getCommentsByGatherId(Long gatherId, PageRequest pageRequest) {
+        return commentRepository.findByGatherId(gatherId, pageRequest);
+    }
+
     public long countCommentsByGatherId(Long gatherId) {
         return commentRepository.countByGatherId(gatherId);
     }
+
+
 }

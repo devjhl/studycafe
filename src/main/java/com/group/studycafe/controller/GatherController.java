@@ -1,21 +1,30 @@
 package com.group.studycafe.controller;
 
 import com.group.studycafe.config.UserInfo;
+import com.group.studycafe.domain.Comment;
 import com.group.studycafe.domain.Gather;
 import com.group.studycafe.domain.GatherWithCommentCount;
 import com.group.studycafe.domain.Status;
 import com.group.studycafe.dto.CommentDto;
+import com.group.studycafe.dto.LikeDto;
 import com.group.studycafe.service.CommentService;
 import com.group.studycafe.service.GatherService;
+import com.group.studycafe.service.LikeService;
 import com.group.studycafe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +37,7 @@ public class GatherController {
     private final GatherService gatherService;
     private final UserService userService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @GetMapping("")
     public String gather(Model model,
@@ -84,12 +94,39 @@ public class GatherController {
     }
 
     @GetMapping("/{id}")
-    public String detailGather(@PathVariable Long id, Model model) {
+    public String detailGather(@PathVariable Long id, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
         Gather gather = gatherService.findById(id);
-        List<CommentDto> commentDtos = commentService.comments(id);
+        Page<Comment> commentPage = commentService.getCommentsByGatherId(id, PageRequest.of(page, size));
+
+        // 현재 로그인된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            currentUsername = ((UserDetails) authentication.getPrincipal()).getUsername();
+        }
+
+        boolean userHasLiked = false;
+        if (currentUsername != null) {
+            userHasLiked = likeService.userHasLiked(id, currentUsername);
+        }
+
+        gather.setUserHasLiked(userHasLiked);
         model.addAttribute("gather", gather);
-        model.addAttribute("commentDtos", commentDtos);
+        model.addAttribute("comments", commentPage.getContent());
+        model.addAttribute("username", currentUsername);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", commentPage.getTotalPages());
+
         return "detailGather";
+    }
+
+
+    @PostMapping("/api/likeGather")
+    public ResponseEntity<String> likeGather(@RequestBody LikeDto likeDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = ((UserDetails) authentication.getPrincipal()).getUsername();
+        likeService.likeGather(likeDto.getGatherId(), currentUsername);
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("/write")

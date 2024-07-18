@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,12 +64,39 @@
             background-color: #ff6b6b;
             color: white;
         }
+        .btn-like.disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
         .btn-share {
             background-color: #4caf50;
             color: white;
         }
         .comment-actions {
             margin-top: 10px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .page-item {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .page-item.disabled {
+            cursor: not-allowed;
+            color: #ddd;
+        }
+        .page-link {
+            padding: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .page-link.active {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -99,7 +126,7 @@
                 <button type="submit" class="btn btn-primary">댓글 작성</button>
             </form>
             <div class="mt-3" id="commentsList">
-                <c:forEach items="${commentDtos}" var="comment">
+                <c:forEach items="${comments}" var="comment">
                     <div class="media mb-3" data-comment-id="${comment.id}">
                         <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
                         <div class="media-body">
@@ -118,13 +145,23 @@
                     </div>
                 </c:forEach>
             </div>
+            <c:if test="${totalPages > 1}">
+                <div class="pagination">
+                    <c:if test="${currentPage > 0}">
+                        <button class="page-item" onclick="loadComments(${currentPage - 1})">이전</button>
+                    </c:if>
+                    <c:forEach begin="0" end="${totalPages - 1}" var="i">
+                        <span class="page-item ${i == currentPage ? 'page-link active' : 'page-link'}" onclick="loadComments(${i})">${i + 1}</span>
+                    </c:forEach>
+                </div>
+            </c:if>
         </div>
     </div>
     <div class="sidebar">
         <c:if test="${username == gather.username}">
             <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status}</button>
         </c:if>
-        <button class="btn btn-like" id="likeBtn" data-gather-id="${gather.id}"><i class="fas fa-heart"></i> ${gather.likes}</button>
+        <button class="btn btn-like ${gather.userHasLiked ? 'disabled' : ''}" id="likeBtn" data-gather-id="${gather.id}" ${gather.userHasLiked ? 'disabled' : ''}><i class="fas fa-heart"></i> ${gather.likes}</button>
         <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
 </div>
@@ -134,6 +171,12 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script>
+    function loadComments(page) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', page);
+        window.location.search = urlParams.toString();
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         const deleteBtn = document.getElementById('deleteBtn');
         if (deleteBtn) {
@@ -196,9 +239,12 @@
                 $.ajax({
                     type: 'POST',
                     url: '/api/likeGather',
-                    data: { id: gatherId },
+                    data: JSON.stringify({ gatherId: gatherId }),
+                    contentType: 'application/json',
                     success: function(response) {
                         likeBtn.innerHTML = '<i class="fas fa-heart"></i> ' + response;
+                        likeBtn.classList.add('disabled');
+                        likeBtn.setAttribute('disabled', 'disabled');
                     },
                     error: function(error) {
                         console.error('좋아요 업데이트 실패: ', error);
@@ -302,7 +348,6 @@
                     alert('댓글 작성에 실패했습니다: ' + error.message);
                 });
         });
-
 
         const commentsList = document.getElementById('commentsList');
         if (commentsList) {

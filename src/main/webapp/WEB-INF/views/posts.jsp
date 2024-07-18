@@ -44,7 +44,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/mypage/reservations">
-                            예약 관리
+                            이용권/좌석 정보
                         </a>
                     </li>
                     <li class="nav-item">

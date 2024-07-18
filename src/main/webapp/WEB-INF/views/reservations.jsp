@@ -11,9 +11,10 @@
         .content {
             min-height: 80vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* Changed from center to flex-start */
             justify-content: center;
             flex-direction: column;
+            padding-bottom: 80px; /* Ensure there's space for footer */
         }
         .footer {
             position: fixed;
@@ -26,13 +27,19 @@
         .nav-tabs {
             margin-top: 20px;
         }
-        .orders-container, .seats-container {
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .info-section {
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
             gap: 10px;
+            margin-bottom: 20px;
         }
-        .order-card, .seat-card {
+        .info-card {
             flex: 0 0 200px;
             margin: 10px;
         }
@@ -60,7 +67,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/mypage/reservations">
-                            예약 관리
+                            이용권/좌석 정보
                         </a>
                     </li>
                     <li class="nav-item">
@@ -76,39 +83,38 @@
                 <h1 class="h2">마이페이지</h1>
             </div>
             <div class="content">
-                <div class="section-title">주문 정보</div>
-                <div id="reservations-content" class="orders-container">
-                    <c:forEach var="order" items="${orderList}">
-                        <div class="card mb-3 order-card">
-                            <div class="card-header">
-                                주문 ID: ${order.id} | 총 가격: ${order.totalPrice}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">주문 상세</h5>
-                                <ul>
-                                    <c:forEach var="ticket" items="${orderTicketNamesMap[order.id]}">
-                                        <li>${ticket.ticketNames}</li>
-                                    </c:forEach>
-                                </ul>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
+                <div class="info-container">
+                    <div class="section-title">이용권 정보</div>
+                    <div id="reservations-content" class="info-section">
+                        <c:forEach var="order" items="${orderList}">
+                            <c:if test="${not empty orderTicketNamesMap[order.id]}">
+                                <div class="card mb-3 info-card">
+                                    <div class="card-header"></div>
+                                    <div class="card-body">
+                                        <h5 class="card-title"></h5>
+                                        <ul>
+                                            <c:forEach var="ticket" items="${orderTicketNamesMap[order.id]}">
+                                                <c:if test="${not empty ticket.ticketNames}">
+                                                    <li>${ticket.ticketNames}</li>
+                                                </c:if>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </div>
 
-                <div class="section-title">좌석 내역</div>
-                <div id="seats-content" class="seats-container">
-                    <c:forEach var="seat" items="${seatList}">
-                        <div class="card mb-3 seat-card">
-                            <div class="card-header">
-                                좌석 위치: ${seat.id}
+                    <div class="section-title">좌석 내역</div>
+                    <div id="seats-content" class="info-section">
+                        <c:forEach var="seat" items="${reservedSeats}">
+                            <div class="card mb-3 info-card">
+                                <div class="card-header">
+                                    좌석 위치: ${seat.id}
+                                </div>
                             </div>
-                            <%--<div class="card-body">
-                                <h5 class="card-title">좌석 상세</h5>
-                                <p>예약 시간: ${seat.reservedAt}</p>
-                                <p>${seat.description}</p>
-                            </div>--%>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
         </main>

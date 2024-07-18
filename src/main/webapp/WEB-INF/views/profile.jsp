@@ -26,6 +26,19 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
+        .content {
+            margin-top: 20px;
+        }
+        .form-control {
+            max-width: 400px;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            width: 100%;
+            max-width: 400px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -45,7 +58,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/mypage/reservations">
-                            예약 관리
+                            이용권/좌석 정보
                         </a>
                     </li>
                     <li class="nav-item">
@@ -64,11 +77,11 @@
 
             <div class="content">
                 <div class="signup-form">
-                    <h3></h3>
+                    <h3>프로필 수정</h3>
                     <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="password">비밀번호</label>
-                            <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" value="${userDto != null ? userDto.password : ''}" minlength="8" maxlength="20" required>
+                            <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
                             <div class="invalid-feedback">
                                 <c:if test="${passwordError != null}">
                                     ${passwordError}
@@ -77,7 +90,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">이메일</label>
-                            <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" value="${userDto != null ? userDto.email : ''}" minlength="5" maxlength="50" required>
+                            <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" minlength="5" maxlength="50" value="${user.email}" required>
                             <div class="invalid-feedback">
                                 <c:if test="${emailError != null}">
                                     ${emailError}
@@ -86,7 +99,7 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">전화번호</label>
-                            <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" value="${userDto != null ? userDto.phone : ''}" minlength="10" maxlength="11" required>
+                            <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" minlength="10" maxlength="11" value="${user.phone}" required>
                             <div class="invalid-feedback">
                                 <c:if test="${phoneError != null}">
                                     ${phoneError}

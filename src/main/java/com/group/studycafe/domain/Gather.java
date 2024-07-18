@@ -3,10 +3,7 @@ package com.group.studycafe.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 @Table(name = "gather")
 @AllArgsConstructor
@@ -22,11 +19,14 @@ public class Gather {
     private String username;
     private int views;
     private int likes;
-    private String status; // 모집중 , 모집완료
-    private int commentCount; // 댓글수
+    private String status;
+    private int commentCount;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @Transient
+    private boolean userHasLiked;
 
     @PrePersist
     protected void onCreate() {

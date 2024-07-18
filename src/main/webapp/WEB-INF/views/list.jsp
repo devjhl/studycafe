@@ -21,11 +21,10 @@
         .search-bar {
             margin-bottom: 20px;
         }
-        .search-bar input {
-            width: calc(100% - 100px);
-        }
-        .search-bar button {
-            width: 100px;
+        .search-bar .form-control,
+        .search-bar .btn {
+            height: 100%;
+            box-sizing: border-box;
         }
         .study-card {
             border: 1px solid #e0e0e0;
@@ -90,7 +89,7 @@
         <a class="nav-item nav-link ${status == '모집완료' ? 'active' : ''}" href="${pageContext.request.contextPath}/gather?status=모집완료&sort=${sort}">모집완료</a>
     </nav>
     <div class="container mt-5">
-        <form action="/gather" method="get" class="input-group mb-3">
+        <form action="/gather" method="get" class="input-group mb-3 search-bar">
             <input type="text" class="form-control" name="keyword" placeholder="관심 스터디를 검색해보세요!" value="${keyword}">
             <input type="hidden" name="status" value="${status}">
             <input type="hidden" name="sort" value="${sort}">
@@ -129,17 +128,14 @@
     </c:forEach>
     <nav>
         <ul class="pagination">
-            <!-- 이전 페이지 버튼 수정 -->
             <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
                 <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage - 1}&keyword=${keyword}&status=${status}&sort=${sort}">이전</a>
             </li>
-            <!-- 페이지 번호 버튼 수정 -->
             <c:forEach var="i" begin="1" end="${totalPages}">
                 <li class="page-item ${currentPage + 1 == i ? 'active' : ''}">
                     <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${i - 1}&keyword=${keyword}&status=${status}&sort=${sort}">${i}</a>
                 </li>
             </c:forEach>
-            <!-- 다음 페이지 버튼 수정 -->
             <li class="page-item ${currentPage + 1 >= totalPages ? 'disabled' : ''}">
                 <a class="page-link" href="${pageContext.request.contextPath}/gather?page=${currentPage + 1}&keyword=${keyword}&status=${status}&sort=${sort}">다음</a>
             </li>

@@ -17,7 +17,7 @@
                             <a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/mypage">마이페이지</a>
+                            <a class="nav-link" href="${pageContext.request.contextPath}/mypage/profile">마이페이지</a>
                         </li>
                     </c:when>
                     <c:otherwise>
