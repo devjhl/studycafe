@@ -39,6 +39,10 @@ public class GatherService {
         return gatherRepository.findById(id).orElse(null);
     }
 
+    public List<Gather> userGather(String username) {
+        return gatherRepository.findByUsername(username);
+    }
+
     public Gather save(Gather gather) {
         return gatherRepository.save(gather);
     }
@@ -97,5 +101,13 @@ public class GatherService {
 
     public List<Gather> findAllByCommentCountDesc() {
         return gatherRepository.findAllByOrderByCommentCountDesc();
+    }
+
+    public List<Gather> findByUsername(String username) {
+        return gatherRepository.findByUsername(username);
+    }
+
+    public List<Gather> findByUsernameAndStatus(String username, String status) {
+        return gatherRepository.findByUsernameAndStatus(username, status);
     }
 }

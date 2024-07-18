@@ -35,4 +35,9 @@ public interface GatherRepository extends JpaRepository<Gather, Long> {
     void incrementViewCount(@Param("id") Long id);
 
     List<Gather> findAllByOrderByCommentCountDesc();
+
+    List<Gather> findByUsername(String username);
+
+
+    List<Gather> findByUsernameAndStatus(String username, String status);
 }

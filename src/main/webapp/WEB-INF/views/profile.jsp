@@ -62,7 +62,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/mypage/posts">
+                        <a class="nav-link" href="/mypage/gathers">
                             작성글 관리
                         </a>
                     </li>

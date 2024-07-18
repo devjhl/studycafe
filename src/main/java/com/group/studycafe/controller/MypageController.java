@@ -1,14 +1,8 @@
 package com.group.studycafe.controller;
 
-import com.group.studycafe.domain.Order;
-import com.group.studycafe.domain.OrderTicketNames;
-import com.group.studycafe.domain.Seat;
-import com.group.studycafe.domain.User;
+import com.group.studycafe.domain.*;
 import com.group.studycafe.dto.ModifyUserDto;
-import com.group.studycafe.service.OrderService;
-import com.group.studycafe.service.OrderTicketNamesService;
-import com.group.studycafe.service.SeatService;
-import com.group.studycafe.service.UserService;
+import com.group.studycafe.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -33,6 +28,7 @@ public class MypageController {
     private final OrderService orderService;
     private final OrderTicketNamesService orderTicketNamesService;
     private final SeatService seatService;
+    private final GatherService gatherService;
 
     @GetMapping("")
     public String mypage() {
@@ -86,5 +82,22 @@ public class MypageController {
         model.addAttribute("reservedSeats", reservedSeats);
 
         return "reservations";
+    }
+    @GetMapping("/gathers")
+    public String gathers(@AuthenticationPrincipal User user,
+                          @RequestParam(value = "status", required = false, defaultValue = "all") String status,
+                          Model model) {
+        List<Gather> userGathers;
+        if (status.equals("recruiting")) {
+            userGathers = gatherService.findByUsernameAndStatus(user.getUsername(), String.valueOf(Status.모집중));
+        } else if (status.equals("completed")) {
+            userGathers = gatherService.findByUsernameAndStatus(user.getUsername(), String.valueOf(Status.모집완료));
+        } else {
+            userGathers = gatherService.findByUsername(user.getUsername());
+        }
+
+        model.addAttribute("gathers", userGathers);
+        model.addAttribute("status", status);
+        return "gathers";
     }
 }

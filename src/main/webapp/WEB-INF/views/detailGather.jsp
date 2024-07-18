@@ -51,6 +51,7 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
+            margin-bottom: 10px; /* 간격 조절 */
         }
         .btn-status {
             background-color: #ddd;
@@ -418,6 +419,20 @@
                             });
                     }
                 }
+            });
+        }
+
+        const shareBtn = document.getElementById('shareBtn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                const url = window.location.href;
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        alert('링크가 클립보드에 복사되었습니다.');
+                    })
+                    .catch(err => {
+                        console.error('링크 복사 실패: ', err);
+                    });
             });
         }
     });
