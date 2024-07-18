@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -94,23 +95,20 @@ public class GatherController {
     }
 
     @GetMapping("/{id}")
-    public String detailGather(@PathVariable Long id, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
+    public String detailGather(@PathVariable Long id,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size,
+                               Model model) {
         Gather gather = gatherService.findById(id);
         Page<Comment> commentPage = commentService.getCommentsByGatherId(id, PageRequest.of(page, size));
 
         // 현재 로그인된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = null;
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            currentUsername = ((UserDetails) authentication.getPrincipal()).getUsername();
-        }
+        String currentUsername = getCurrentUsername(authentication);
 
-        boolean userHasLiked = false;
-        if (currentUsername != null) {
-            userHasLiked = likeService.userHasLiked(id, currentUsername);
-        }
-
+        boolean userHasLiked = currentUsername != null && likeService.userHasLiked(id, currentUsername);
         gather.setUserHasLiked(userHasLiked);
+
         model.addAttribute("gather", gather);
         model.addAttribute("comments", commentPage.getContent());
         model.addAttribute("username", currentUsername);
@@ -120,14 +118,39 @@ public class GatherController {
         return "detailGather";
     }
 
+    private String getCurrentUsername(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
 
-    @PostMapping("/api/likeGather")
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else if (principal instanceof String) {
+            return (String) principal;
+        }
+
+        return null;
+    }
+
+
+    @PostMapping("/gather/api/likeGather")
     public ResponseEntity<String> likeGather(@RequestBody LikeDto likeDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String currentUsername = UserInfo.getCurrentUsername();
         likeService.likeGather(likeDto.getGatherId(), currentUsername);
         return ResponseEntity.ok("success");
     }
+
+    @PutMapping("/updateStatus/{gatherId}")
+    public ResponseEntity<Void> updateStatus(@PathVariable Long gatherId) {
+        try {
+            gatherService.updateStatus(gatherId);
+            return ResponseEntity.ok().build(); // 상태 업데이트 성공 시 빈 응답 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 에러 발생 시 빈 응답 반환
+        }
+    }
+
 
     @GetMapping("/write")
     public String write() {

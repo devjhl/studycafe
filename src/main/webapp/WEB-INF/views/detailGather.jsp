@@ -1,4 +1,3 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -107,7 +106,7 @@
         <div class="post-header">
             <h1>${gather.title}</h1>
             <p><strong>${gather.username}</strong></p>
-            <p class="text-muted">작성일 <fmt:formatDate value="${gather.date}" pattern="yyyy-MM-dd HH:mm:ss"/> <span class="ml-2">조회수 ${gather.views}</span></p>
+            <p class="text-muted">작성일 ${gather.date} <span class="ml-2">조회수 ${gather.views}</span></p>
         </div>
         <div class="post-content">
             <pre>${gather.content}</pre>
@@ -131,7 +130,7 @@
                         <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
                         <div class="media-body">
                             <h6 class="mt-0">${comment.username}</h6>
-                            <p class="text-muted"><fmt:formatDate value="${comment.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></p>
+                            <p class="text-muted">${comment.createdAt}</p>
                             <p class="comment-body">${comment.body}</p>
                             <input type="text" class="form-control comment-body-edit" style="display:none;" value="${comment.body}">
                             <c:if test="${username == comment.username}">
@@ -159,7 +158,7 @@
     </div>
     <div class="sidebar">
         <c:if test="${username == gather.username}">
-            <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status}</button>
+            <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status == '모집완료' ? '모집중' : '모집완료'}</button>
         </c:if>
         <button class="btn btn-like ${gather.userHasLiked ? 'disabled' : ''}" id="likeBtn" data-gather-id="${gather.id}" ${gather.userHasLiked ? 'disabled' : ''}><i class="fas fa-heart"></i> ${gather.likes}</button>
         <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
@@ -207,7 +206,7 @@
         const statusBtn = document.getElementById('statusBtn');
         if (statusBtn) {
             statusBtn.addEventListener('click', () => {
-                const gatherId = ${gather.id};
+                const gatherId = statusBtn.getAttribute('data-gather-id');
                 fetch('/api/updateStatus/' + gatherId, {
                     method: 'PUT',
                     headers: {
@@ -216,18 +215,16 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            return response.text();
+                            // 상태 변경 후 서버에서 받은 새로운 상태를 업데이트
+                            statusBtn.innerText = statusBtn.innerText === '모집중' ? '모집완료' : '모집중';
+                            statusBtn.classList.toggle('btn-status');
+                            statusBtn.classList.toggle('btn-status-complete');
                         } else {
                             throw new Error('Network response was not ok.');
                         }
                     })
-                    .then(data => {
-                        statusBtn.classList.remove('btn-status');
-                        statusBtn.classList.add('btn-status-complete');
-                        statusBtn.innerText = '모집완료';
-                    })
                     .catch(error => {
-                        alert('Error updating status: ' + error.message);
+                        console.error('Error updating status: ' + error.message);
                     });
             });
         }

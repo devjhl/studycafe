@@ -5,7 +5,6 @@ import com.group.studycafe.repository.CommentRepository;
 import com.group.studycafe.repository.GatherRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -61,10 +60,14 @@ public class GatherService {
     }
 
     @Transactional
-    public void updateStatus(Long id) {
-        Gather gather = gatherRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid gather ID"));
-        gather.setStatus("모집완료");
-        gatherRepository.save(gather);
+    public Gather updateStatus(Long gatherId) {
+        Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("Invalid gather Id:" + gatherId));
+        if ("모집중".equals(gather.getStatus())) {
+            gather.setStatus("모집완료");
+        } else {
+            gather.setStatus("모집중");
+        }
+        return gatherRepository.save(gather);
     }
 
     @Transactional
