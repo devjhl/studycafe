@@ -29,6 +29,11 @@
             box-shadow: 0px 0px 10px 0px #0000001f;
             text-decoration: none;
             color: inherit;
+            transition: transform 0.3s ease;
+        }
+        .ticket-box:hover, .reservation-box:hover {
+            transform: translateY(-10px);
+            text-decoration: none;
         }
         .circle {
             width: 200px;
@@ -45,6 +50,7 @@
             padding: 10px 20px;
             border-radius: 30px;
             font-weight: bold;
+            background-color: #fff;
         }
         .yellow {
             background-color: #ffd700;
@@ -107,8 +113,8 @@
     </div>
 </main>
 
-<%--<jsp:include page="/WEB-INF/views/footer.jsp" />--%>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

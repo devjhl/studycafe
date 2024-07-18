@@ -30,14 +30,14 @@
             margin-top: 20px;
         }
         .form-control {
-            max-width: 400px;
+            max-width: 100%;
         }
         .form-group {
             margin-bottom: 1.5rem;
         }
         .btn-primary {
             width: 100%;
-            max-width: 400px;
+            max-width: 100%;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -76,38 +76,42 @@
             </div>
 
             <div class="content">
-                <div class="signup-form">
-                    <h3>프로필 수정</h3>
-                    <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="password">비밀번호</label>
-                            <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
-                            <div class="invalid-feedback">
-                                <c:if test="${passwordError != null}">
-                                    ${passwordError}
-                                </c:if>
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="signup-form">
+                            <h3></h3>
+                            <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="password">비밀번호</label>
+                                    <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
+                                    <div class="invalid-feedback">
+                                        <c:if test="${passwordError != null}">
+                                            ${passwordError}
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">이메일</label>
+                                    <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" minlength="5" maxlength="50" value="${user.email}" required>
+                                    <div class="invalid-feedback">
+                                        <c:if test="${emailError != null}">
+                                            ${emailError}
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">전화번호</label>
+                                    <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" minlength="10" maxlength="11" value="${user.phone}" required>
+                                    <div class="invalid-feedback">
+                                        <c:if test="${phoneError != null}">
+                                            ${phoneError}
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">수정</button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label for="email">이메일</label>
-                            <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" minlength="5" maxlength="50" value="${user.email}" required>
-                            <div class="invalid-feedback">
-                                <c:if test="${emailError != null}">
-                                    ${emailError}
-                                </c:if>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">전화번호</label>
-                            <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" minlength="10" maxlength="11" value="${user.phone}" required>
-                            <div class="invalid-feedback">
-                                <c:if test="${phoneError != null}">
-                                    ${phoneError}
-                                </c:if>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">수정</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </main>

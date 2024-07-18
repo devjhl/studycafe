@@ -39,7 +39,7 @@ public class BookController {
         model.addAttribute("hasOrders", hasOrders);
         model.addAttribute("orders", orders);
         model.addAttribute("user", user);
-        model.addAttribute("seats", seatDataList); // seatDataList를 모델에 추가
+        model.addAttribute("seats", seatDataList);
 
         return "book";
     }

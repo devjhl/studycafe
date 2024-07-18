@@ -50,6 +50,8 @@ public class MypageController {
         modifyUserDto.setEmail(user.getEmail());
         modifyUserDto.setPhone(user.getPhone());
 
+        model.addAttribute("user",user);
+
         model.addAttribute("userDto", modifyUserDto);
         return "profile";
     }
@@ -78,7 +80,6 @@ public class MypageController {
         }
 
         List<Seat> reservedSeats = seatService.findReservedSeatsByUser(user.getId());
-        System.out.println("reserved seats: " + reservedSeats);
 
         model.addAttribute("orderList", orderList);
         model.addAttribute("orderTicketNamesMap", orderTicketNamesMap);

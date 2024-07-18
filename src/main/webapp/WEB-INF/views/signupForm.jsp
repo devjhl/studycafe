@@ -98,10 +98,10 @@
                         </c:if>
                     </div>
                 </div>
-                <div class="form-group">
+               <%-- <div class="form-group">
                     <label for="profile">프로필</label>
                     <input type="file" class="form-control-file" id="profile" name="profile" accept="image/*">
-                </div>
+                </div>--%>
                 <button type="submit" class="btn btn-primary">가입</button>
             </form>
         </div>
