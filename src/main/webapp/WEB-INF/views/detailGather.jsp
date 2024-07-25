@@ -128,7 +128,7 @@
             <div class="mt-3" id="commentsList">
                 <c:forEach items="${comments}" var="comment">
                     <div class="media mb-3" data-comment-id="${comment.id}">
-                        <img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">
+                        <%--<img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">--%>
                         <div class="media-body">
                             <h6 class="mt-0">${comment.username}</h6>
                             <p class="text-muted">${comment.createdAt}</p>
@@ -293,10 +293,10 @@
                     newComment.classList.add('media', 'mb-3');
                     newComment.setAttribute('data-comment-id', data.id);
 
-                    const img = document.createElement('img');
+                   /* const img = document.createElement('img');
                     img.src = '/img/user.png';
                     img.classList.add('mr-3', 'rounded-circle');
-                    img.style.width = '40px';
+                    img.style.width = '40px';*/
 
                     const mediaBody = document.createElement('div');
                     mediaBody.classList.add('media-body');
