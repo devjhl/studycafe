@@ -34,9 +34,6 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <%--<div class="card-header">
-                    <h4 class="my-0 font-weight-normal">주문 확인</h4>
-                </div>--%>
                 <div class="card-body">
                     <p class="text-success">주문이 성공적으로 완료되었습니다.</p>
                     <p><strong>이름:</strong> <span id="username">${order.username}</span></p>

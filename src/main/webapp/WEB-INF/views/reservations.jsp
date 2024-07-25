@@ -51,6 +51,10 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+        .info-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
     </style>
 </head>
 <body>
@@ -89,7 +93,6 @@
                         <c:forEach var="order" items="${orderList}">
                             <c:if test="${not empty orderTicketNamesMap[order.id]}">
                                 <div class="card mb-3 info-card">
-                                    <div class="card-header"></div>
                                     <div class="card-body">
                                         <h5 class="card-title"></h5>
                                         <ul>

@@ -161,8 +161,10 @@
         <c:if test="${username == gather.username}">
             <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status == '모집완료' ? '모집중' : '모집완료'}</button>
         </c:if>
-        <button class="btn btn-like ${gather.userHasLiked ? 'disabled' : ''}" id="likeBtn" data-gather-id="${gather.id}" ${gather.userHasLiked ? 'disabled' : ''}><i class="fas fa-heart"></i> ${gather.likes}</button>
-        <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
+        <c:if test="${username != 'anonymousUser'}">
+            <button class="btn btn-like ${gather.userHasLiked ? 'disabled' : ''}" id="likeBtn" data-gather-id="${gather.id}" ${gather.userHasLiked ? 'disabled' : ''}><i class="fas fa-heart"></i> <span id="likeCount">${gather.likes}</span></button>
+        </c:if>
+            <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
@@ -240,7 +242,7 @@
                     data: JSON.stringify({ gatherId: gatherId }),
                     contentType: 'application/json',
                     success: function(response) {
-                        likeBtn.innerHTML = '<i class="fas fa-heart"></i> ' + response;
+                        $('#likeCount').text(response);
                         likeBtn.classList.add('disabled');
                         likeBtn.setAttribute('disabled', 'disabled');
                     },

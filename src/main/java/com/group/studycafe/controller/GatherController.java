@@ -135,10 +135,10 @@ public class GatherController {
 
 
     @PostMapping("/gather/api/likeGather")
-    public ResponseEntity<String> likeGather(@RequestBody LikeDto likeDto) {
+    public ResponseEntity<Integer> likeGather(@RequestBody LikeDto likeDto) {
         String currentUsername = UserInfo.getCurrentUsername();
-        likeService.likeGather(likeDto.getGatherId(), currentUsername);
-        return ResponseEntity.ok("success");
+        int updatedLikes = likeService.likeGather(likeDto.getGatherId(), currentUsername);
+        return ResponseEntity.ok(updatedLikes);
     }
 
     @PutMapping("/updateStatus/{gatherId}")

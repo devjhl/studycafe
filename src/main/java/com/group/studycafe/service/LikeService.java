@@ -20,7 +20,7 @@ public class LikeService {
         return likeRepository.findByGatherIdAndUsername(gatherId, username).isPresent();
     }
 
-    public void likeGather(Long gatherId, String username) {
+    public int likeGather(Long gatherId, String username) {
         if (!userHasLiked(gatherId, username)) {
             Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("Invalid gather Id:" + gatherId));
             Like like = new Like();
@@ -28,6 +28,7 @@ public class LikeService {
             like.setUsername(username);
             likeRepository.save(like);
         }
+        return 0;
     }
 
     public void unlikeGather(Long gatherId, String username) {
