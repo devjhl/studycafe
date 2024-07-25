@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -134,12 +136,31 @@ public class GatherController {
     }
 
 
-    @PostMapping("/gather/api/likeGather")
-    public ResponseEntity<Integer> likeGather(@RequestBody LikeDto likeDto) {
+    @PostMapping("/api/likeGather")
+    public ResponseEntity<Map<String, Object>> likeGather(@RequestBody LikeDto likeDto) {
         String currentUsername = UserInfo.getCurrentUsername();
-        int updatedLikes = likeService.likeGather(likeDto.getGatherId(), currentUsername);
-        return ResponseEntity.ok(updatedLikes);
+        boolean userHasLiked = likeService.userHasLiked(likeDto.getGatherId(), currentUsername);
+        int updatedLikes;
+
+        if (userHasLiked) {
+            // 좋아요 취소
+            likeService.unlikeGather(likeDto.getGatherId(), currentUsername);
+            updatedLikes = likeService.getLikesCount(likeDto.getGatherId());
+            userHasLiked = false;
+        } else {
+            // 좋아요 추가
+            updatedLikes = likeService.likeGather(likeDto.getGatherId(), currentUsername);
+            userHasLiked = true;
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("likes", updatedLikes);
+        response.put("userHasLiked", userHasLiked);
+
+        return ResponseEntity.ok(response);
     }
+
+
 
     @PutMapping("/updateStatus/{gatherId}")
     public ResponseEntity<Void> updateStatus(@PathVariable Long gatherId) {

@@ -7,6 +7,8 @@ import com.group.studycafe.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class LikeService {
 
@@ -20,6 +22,7 @@ public class LikeService {
         return likeRepository.findByGatherIdAndUsername(gatherId, username).isPresent();
     }
 
+    @Transactional
     public int likeGather(Long gatherId, String username) {
         if (!userHasLiked(gatherId, username)) {
             Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("Invalid gather Id:" + gatherId));
@@ -27,13 +30,26 @@ public class LikeService {
             like.setGather(gather);
             like.setUsername(username);
             likeRepository.save(like);
+
+            gather.setLikes(gather.getLikes() + 1);
+            gatherRepository.save(gather);
         }
-        return 0;
+        return gatherRepository.findById(gatherId).get().getLikes();
     }
 
-    public void unlikeGather(Long gatherId, String username) {
+    @Transactional
+    public int unlikeGather(Long gatherId, String username) {
         if (userHasLiked(gatherId, username)) {
             likeRepository.deleteByGatherIdAndUsername(gatherId, username);
+
+            Gather gather = gatherRepository.findById(gatherId).orElseThrow(() -> new IllegalArgumentException("Invalid gather Id:" + gatherId));
+            gather.setLikes(gather.getLikes() - 1);
+            gatherRepository.save(gather);
         }
+        return gatherRepository.findById(gatherId).get().getLikes();
+    }
+
+    public int getLikesCount(Long gatherId) {
+        return gatherRepository.findById(gatherId).map(Gather::getLikes).orElse(0);
     }
 }

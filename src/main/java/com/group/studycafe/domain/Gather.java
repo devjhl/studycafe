@@ -18,7 +18,7 @@ public class Gather {
     private String content;
     private String username;
     private int views;
-    private int likes;
+    private int likes; // 좋아요 수
     private String status;
     private int commentCount;
 
@@ -26,7 +26,7 @@ public class Gather {
     private Date date;
 
     @Transient
-    private boolean userHasLiked;
+    private boolean userHasLiked; // 좋아요 여부
 
     @PrePersist
     protected void onCreate() {

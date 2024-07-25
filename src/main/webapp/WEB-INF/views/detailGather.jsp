@@ -162,7 +162,9 @@
             <button class="btn ${gather.status == '모집완료' ? 'btn-status-complete' : 'btn-status'}" id="statusBtn" data-gather-id="${gather.id}">${gather.status == '모집완료' ? '모집중' : '모집완료'}</button>
         </c:if>
         <c:if test="${username != 'anonymousUser'}">
-            <button class="btn btn-like ${gather.userHasLiked ? 'disabled' : ''}" id="likeBtn" data-gather-id="${gather.id}" ${gather.userHasLiked ? 'disabled' : ''}><i class="fas fa-heart"></i> <span id="likeCount">${gather.likes}</span></button>
+            <button class="btn btn-like" id="likeBtn" data-gather-id="${gather.id}">
+                <i class="fas fa-heart"></i><span id="likeCount">${gather.likes}</span>
+            </button>
         </c:if>
             <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
@@ -180,6 +182,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', (event) => {
+        // 삭제 버튼 이벤트 핸들러
         const deleteBtn = document.getElementById('deleteBtn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
@@ -206,6 +209,7 @@
             });
         }
 
+        // 모집 상태 버튼 이벤트 핸들러
         const statusBtn = document.getElementById('statusBtn');
         if (statusBtn) {
             statusBtn.addEventListener('click', () => {
@@ -218,7 +222,6 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            // 상태 변경 후 서버에서 받은 새로운 상태를 업데이트
                             statusBtn.innerText = statusBtn.innerText === '모집중' ? '모집완료' : '모집중';
                             statusBtn.classList.toggle('btn-status');
                             statusBtn.classList.toggle('btn-status-complete');
@@ -232,27 +235,35 @@
             });
         }
 
+        // 좋아요 버튼 이벤트 핸들러
         const likeBtn = document.getElementById('likeBtn');
         if (likeBtn) {
-            likeBtn.addEventListener('click', function() {
-                const gatherId = this.getAttribute('data-gather-id');
-                $.ajax({
-                    type: 'POST',
-                    url: '/api/likeGather',
-                    data: JSON.stringify({ gatherId: gatherId }),
-                    contentType: 'application/json',
-                    success: function(response) {
-                        $('#likeCount').text(response);
-                        likeBtn.classList.add('disabled');
-                        likeBtn.setAttribute('disabled', 'disabled');
+            likeBtn.addEventListener('click', () => {
+                const gatherId = likeBtn.getAttribute('data-gather-id');
+                fetch('/gather/api/likeGather', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    error: function(error) {
-                        console.error('좋아요 업데이트 실패: ', error);
-                    }
-                });
+                    body: JSON.stringify({ gatherId: gatherId })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('likeCount').textContent = data.likes;
+                        likeBtn.classList.toggle('disabled', data.userHasLiked);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
         }
 
+        // 댓글 작성 이벤트 핸들러
         document.getElementById('commentForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const gatherId = ${gather.id};
@@ -349,6 +360,7 @@
                 });
         });
 
+        // 댓글 수정 및 삭제 이벤트 핸들러
         const commentsList = document.getElementById('commentsList');
         if (commentsList) {
             commentsList.addEventListener('click', function(event) {
@@ -424,6 +436,7 @@
             });
         }
 
+        // 공유 버튼 이벤트 핸들러
         const shareBtn = document.getElementById('shareBtn');
         if (shareBtn) {
             shareBtn.addEventListener('click', function() {

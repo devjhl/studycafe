@@ -16,8 +16,4 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "gather_id")
     private Gather gather;
-
-    public void setGather(Gather gather) {
-        this.gather = gather;
-    }
 }
