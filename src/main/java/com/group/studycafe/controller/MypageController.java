@@ -54,7 +54,21 @@ public class MypageController {
 
     @PostMapping("/profile")
     public String updateProfile(@Valid ModifyUserDto modifyUserDto, BindingResult bindingResult, @AuthenticationPrincipal User user, Model model) {
-        if (bindingResult.hasErrors()) {
+        boolean hasErrors = false;
+
+        // 이메일 중복 체크
+        if (!userService.isEmailAvailable(modifyUserDto.getEmail(), user)) {
+            model.addAttribute("emailError", "이미 사용 중인 이메일입니다.");
+            hasErrors = true;
+        }
+
+        // 전화번호 중복 체크
+        if (!userService.isPhoneAvailable(modifyUserDto.getPhone(), user)) {
+            model.addAttribute("phoneError", "이미 사용 중인 전화번호입니다.");
+            hasErrors = true;
+        }
+
+        if (bindingResult.hasErrors() || hasErrors) {
             bindingResult.getFieldErrors().forEach(fieldError ->
                     model.addAttribute(fieldError.getField() + "Error", fieldError.getDefaultMessage())
             );
@@ -62,7 +76,6 @@ public class MypageController {
         }
 
         userService.updateUser(modifyUserDto, user);
-
         return "redirect:/mypage/profile";
     }
 

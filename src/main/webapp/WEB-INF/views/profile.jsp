@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -39,10 +40,10 @@
             width: 100%;
             max-width: 100%;
         }
+        .invalid-feedback {
+            color: red;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -83,29 +84,23 @@
                             <form id="profileForm" action="${pageContext.request.contextPath}/mypage/profile" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="password">비밀번호</label>
-                                    <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
+                                    <input type="password" class="form-control <c:if test="${not empty passwordError}">is-invalid</c:if>" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
                                     <div class="invalid-feedback">
-                                        <c:if test="${passwordError != null}">
-                                            ${passwordError}
-                                        </c:if>
+                                        <c:out value="${passwordError}" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">이메일</label>
-                                    <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" minlength="5" maxlength="50" value="${user.email}" required>
+                                    <input type="email" class="form-control <c:if test="${not empty emailError}">is-invalid</c:if>" id="email" name="email" placeholder="이메일을 입력해주세요" minlength="5" maxlength="50" value="${user.email}" required>
                                     <div class="invalid-feedback">
-                                        <c:if test="${emailError != null}">
-                                            ${emailError}
-                                        </c:if>
+                                        <c:out value="${emailError}" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">전화번호</label>
-                                    <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" minlength="10" maxlength="11" value="${user.phone}" required>
+                                    <input type="text" class="form-control <c:if test="${not empty phoneError}">is-invalid</c:if>" id="phone" name="phone" placeholder="전화번호를 입력해주세요" minlength="10" maxlength="11" value="${user.phone}" required>
                                     <div class="invalid-feedback">
-                                        <c:if test="${phoneError != null}">
-                                            ${phoneError}
-                                        </c:if>
+                                        <c:out value="${phoneError}" />
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary">수정</button>
@@ -119,30 +114,5 @@
 </div>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
-
-<script>
-    $(document).ready(function() {
-        $('#profileForm').on('submit', function(e) {
-            e.preventDefault();
-
-            var form = $(this);
-            var url = form.attr('action');
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: form.serialize(),
-                success: function(data) {
-                    alert("개인정보가 수정되었습니다.");
-                    $('html').html(data);
-                },
-                error: function() {
-                    alert("수정 중 오류가 발생했습니다.");
-                }
-            });
-        });
-    });
-</script>
-
 </body>
 </html>

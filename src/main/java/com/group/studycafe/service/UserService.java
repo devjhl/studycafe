@@ -78,4 +78,15 @@ public class UserService {
     public boolean isPhoneTaken(String phone) {
         return userRepository.existsByPhone(phone);
     }
+
+
+    public boolean isEmailAvailable(String email, User currentUser) {
+        User existingUser = userRepository.findByEmail(email);
+        return existingUser == null || existingUser.getId().equals(currentUser.getId());
+    }
+
+    public boolean isPhoneAvailable(String phone, User currentUser) {
+        User existingUser = userRepository.findByPhone(phone);
+        return existingUser == null || existingUser.getId().equals(currentUser.getId());
+    }
 }
