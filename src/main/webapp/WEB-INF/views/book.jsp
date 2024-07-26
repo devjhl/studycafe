@@ -103,7 +103,7 @@
                     <a class="nav-link" href="/logout">로그아웃</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/mypage">마이페이지</a>
+                    <a class="nav-link" href="/mypage/profile">마이페이지</a>
                 </li>
             </ul>
         </div>
@@ -134,99 +134,106 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-    let userInfo = {
-        userId: '1'
+        let userInfo = {
+        userId: '1',
+        remainingTime: 0 // 사용자가 남은 이용권 시간 (분 단위)
     };
-    let hasOrder = false; // 초기화
 
-    $(document).ready(function() {
-        // 서버에서 이용권 구매 여부를 확인하는 요청
+        $(document).ready(function() {
+        // 서버에서 이용권 시간 확인
         fetch('/api/v1/checkOrder')
             .then(response => response.json())
             .then(data => {
-                hasOrder = data.hasOrder; // 서버에서 받아온 값을 할당
+                userInfo.remainingTime = data.remainingTime; // 남은 이용권 시간 설정
+                hasOrder = data.hasOrder; // 이용권 구매 여부 설정
             })
             .catch(error => {
                 console.error('Error checking order:', error);
             });
 
         fetch('/api/v1/seats')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Seats data:', data); // 데이터 확인용 로그
+        .then(response => response.json())
+        .then(data => {
+        console.log('Seats data:', data); // 데이터 확인용 로그
 
-                const seatContainer = $('#seatContainer');
+        const seatContainer = $('#seatContainer');
 
-                data.forEach(seat => {
-                    const seatDiv = $('<div></div>')
-                        .addClass('seat')
-                        .text(seat.id)
-                        .attr('data-seat-id', seat.id);
-                    if (seat.reserved) {
-                        if (Number(seat.userId) === Number(userInfo.userId)) {
-                            seatDiv.addClass('reserved');
-                        } else {
-                            seatDiv.addClass('unavailable');
-                        }
-                    }
-                    seatContainer.append(seatDiv);
-                });
+        data.forEach(seat => {
+        const seatDiv = $('<div></div>')
+        .addClass('seat')
+        .text(seat.id)
+        .attr('data-seat-id', seat.id)
+        .attr('data-seat-duration', seat.duration); // 좌석 예약에 필요한 시간
 
-                // 좌석 클릭 이벤트 바인딩
-                $('.seat').on('click', function () {
-                    if (!${hasOrders}) {
-                        alert('이용권 구매 후 이용해주세요.');
-                        return;
-                    }
-                    if ($(this).hasClass('reserved') || $(this).hasClass('unavailable')) {
-                        alert('이 좌석은 선택할 수 없습니다.');
-                        return;
-                    }
-                    if ($('.seat.selected').length > 0 && !$(this).hasClass('selected')) {
-                        alert('하나의 좌석만 선택할 수 있습니다.');
-                        return;
-                    }
-                    $(this).toggleClass('selected');
-                });
-            })
-            .catch(error => console.error('Error loading seats:', error));
+        if (seat.reserved) {
+        if (Number(seat.userId) === Number(userInfo.userId)) {
+        seatDiv.addClass('reserved');
+    } else {
+        seatDiv.addClass('unavailable');
+    }
+    }
+        seatContainer.append(seatDiv);
+    });
+
+        // 좌석 클릭 이벤트 바인딩
+        $('.seat').on('click', function () {
+        if (!hasOrder) {
+        alert('이용권 구매 후 이용해주세요.');
+        return;
+    }
+        if ($(this).hasClass('reserved') || $(this).hasClass('unavailable')) {
+        alert('이 좌석은 선택할 수 없습니다.');
+        return;
+    }
+        if (userInfo.remainingTime < $(this).data('seat-duration')) {
+        alert('이용권 시간이 부족합니다.');
+        return;
+    }
+        if ($('.seat.selected').length > 0 && !$(this).hasClass('selected')) {
+        alert('하나의 좌석만 선택할 수 있습니다.');
+        return;
+    }
+        $(this).toggleClass('selected');
+    });
+    })
+        .catch(error => console.error('Error loading seats:', error));
 
         // 예약 버튼 클릭 이벤트
         $('#reserveButton').on('click', async function() {
-            if (!${hasOrders}) {
-                alert('이용권 구매 후 이용해주세요.');
-                return;
-            }
-            const selectedSeat = $('.seat.selected').first();
-            if (!selectedSeat.length) {
-                alert('예약할 좌석을 선택하세요.');
-                return;
-            }
+        if (!hasOrder) {
+        alert('이용권 구매 후 이용해주세요.');
+        return;
+    }
+        const selectedSeat = $('.seat.selected').first();
+        if (!selectedSeat.length) {
+        alert('예약할 좌석을 선택하세요.');
+        return;
+    }
 
-            const reservationRequest = {
-                seatId: selectedSeat.data('seat-id'),
-                userId: userInfo.userId
-            };
+        const reservationRequest = {
+        seatId: selectedSeat.data('seat-id'),
+        userId: userInfo.userId
+    };
 
-            try {
-                const response = await fetch('/api/v1/seats/reserve', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(reservationRequest)
-                });
+        try {
+        const response = await fetch('/api/v1/seats/reserve', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(reservationRequest)
+    });
 
-                if (response.ok) {
-                    selectedSeat.removeClass('selected').addClass('reserved');
-                    alert('좌석이 예약되었습니다.');
-                } else {
-                    const errorText = await response.text();
-                    alert('예약 실패: ' + errorText);
-                }
-            } catch (error) {
-                console.error('Error during reservation request:', error);
-                alert('예약 요청에 실패했습니다. 다시 시도해주세요.');
-            }
-        });
+        if (response.ok) {
+        selectedSeat.removeClass('selected').addClass('reserved');
+        alert('좌석이 예약되었습니다.');
+    } else {
+        const errorText = await response.text();
+        alert('예약 실패: ' + errorText);
+    }
+    } catch (error) {
+        console.error('Error during reservation request:', error);
+        alert('예약 요청에 실패했습니다. 다시 시도해주세요.');
+    }
+    });
     });
 </script>
 </body>

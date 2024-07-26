@@ -83,7 +83,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link" href="/reservation">예약하기</a></li>
-                <li class="nav-item"><a class="nav-link" href="#study">스터디</a></li>
                 <li class="nav-item"><a class="nav-link" href="/gather">모집게시판</a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
             </ul>
