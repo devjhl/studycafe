@@ -38,14 +38,34 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@Valid SignupUserDto userDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            // 바인딩 오류를 모델에 추가
+        boolean hasErrors = false;
+
+        // 아이디 중복 체크
+        if (userService.isUsernameTaken(userDto.getUsername())) {
+            model.addAttribute("usernameError", "이미 사용 중인 아이디입니다.");
+            hasErrors = true;
+        }
+
+        // 이메일 중복 체크
+        if (userService.isEmailTaken(userDto.getEmail())) {
+            model.addAttribute("emailError", "이미 사용 중인 이메일입니다.");
+            hasErrors = true;
+        }
+
+        // 전화번호 중복 체크
+        if (userService.isPhoneTaken(userDto.getPhone())) {
+            model.addAttribute("phoneError", "이미 사용 중인 전화번호입니다.");
+            hasErrors = true;
+        }
+
+        if (bindingResult.hasErrors() || hasErrors) {
             bindingResult.getFieldErrors().forEach(fieldError ->
                     model.addAttribute(fieldError.getField() + "Error", fieldError.getDefaultMessage())
             );
             model.addAttribute("userDto", userDto);
             return "signupForm";
         }
+
         userService.save(userDto);
         return "redirect:/login";
     }

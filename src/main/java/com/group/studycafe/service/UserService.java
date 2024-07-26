@@ -66,4 +66,16 @@ public class UserService {
         currentUser.setPhone(modifyUserDto.getPhone());
         userRepository.save(currentUser);
     }
+
+    public boolean isUsernameTaken(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean isEmailTaken(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean isPhoneTaken(String phone) {
+        return userRepository.existsByPhone(phone);
+    }
 }

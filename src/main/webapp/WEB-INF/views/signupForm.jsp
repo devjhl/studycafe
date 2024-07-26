@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -41,11 +42,8 @@
             padding: 10px;
         }
         .invalid-feedback {
-            display: none;
             color: red;
-        }
-        .is-invalid + .invalid-feedback {
-            display: block;
+            display: block; /* 항상 표시되게 변경 */
         }
         .footer {
             background-color: #f8f9fa;
@@ -64,44 +62,32 @@
             <form action="${pageContext.request.contextPath}/signup" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="username">아이디</label>
-                    <input type="text" class="form-control ${usernameError != null ? 'is-invalid' : ''}" id="username" name="username" placeholder="아이디를 입력해주세요" value="${userDto != null ? userDto.username : ''}" minlength="5" maxlength="13" required>
+                    <input type="text" class="form-control <c:if test="${not empty usernameError}">is-invalid</c:if>" id="username" name="username" placeholder="아이디를 입력해주세요" value="${userDto != null ? userDto.username : ''}" minlength="5" maxlength="13" required>
                     <div class="invalid-feedback">
-                        <c:if test="${usernameError != null}">
-                            ${usernameError}
-                        </c:if>
+                        <c:out value="${usernameError}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="password">비밀번호</label>
-                    <input type="password" class="form-control ${passwordError != null ? 'is-invalid' : ''}" id="password" name="password" placeholder="비밀번호를 입력해주세요" value="${userDto != null ? userDto.password : ''}" minlength="8" maxlength="20" required>
+                    <input type="password" class="form-control <c:if test="${not empty passwordError}">is-invalid</c:if>" id="password" name="password" placeholder="비밀번호를 입력해주세요" minlength="8" maxlength="20" required>
                     <div class="invalid-feedback">
-                        <c:if test="${passwordError != null}">
-                            ${passwordError}
-                        </c:if>
+                        <c:out value="${passwordError}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="email">이메일</label>
-                    <input type="email" class="form-control ${emailError != null ? 'is-invalid' : ''}" id="email" name="email" placeholder="이메일을 입력해주세요" value="${userDto != null ? userDto.email : ''}" minlength="5" maxlength="50" required>
+                    <input type="email" class="form-control <c:if test="${not empty emailError}">is-invalid</c:if>" id="email" name="email" placeholder="이메일을 입력해주세요" value="${userDto != null ? userDto.email : ''}" minlength="5" maxlength="50" required>
                     <div class="invalid-feedback">
-                        <c:if test="${emailError != null}">
-                            ${emailError}
-                        </c:if>
+                        <c:out value="${emailError}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="phone">전화번호</label>
-                    <input type="text" class="form-control ${phoneError != null ? 'is-invalid' : ''}" id="phone" name="phone" placeholder="전화번호를 입력해주세요" value="${userDto != null ? userDto.phone : ''}" minlength="10" maxlength="11" required>
+                    <input type="text" class="form-control <c:if test="${not empty phoneError}">is-invalid</c:if>" id="phone" name="phone" placeholder="전화번호를 입력해주세요" value="${userDto != null ? userDto.phone : ''}" minlength="10" maxlength="11" required>
                     <div class="invalid-feedback">
-                        <c:if test="${phoneError != null}">
-                            ${phoneError}
-                        </c:if>
+                        <c:out value="${phoneError}" />
                     </div>
                 </div>
-               <%-- <div class="form-group">
-                    <label for="profile">프로필</label>
-                    <input type="file" class="form-control-file" id="profile" name="profile" accept="image/*">
-                </div>--%>
                 <button type="submit" class="btn btn-primary">가입</button>
             </form>
         </div>

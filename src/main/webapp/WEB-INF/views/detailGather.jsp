@@ -116,8 +116,17 @@
             <a class="btn btn-warning btn-edit" href="/gather/updateGather/${gather.id}">수정</a>
             <button class="btn btn-danger btn-delete" id="deleteBtn">삭제</button>
         </c:if>
+        <hr>
         <div class="comment-box">
             <h5>댓글</h5>
+        <c:if test="${username == 'anonymousUser'}">
+            <form id="commentForm">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="commentBody2" placeholder="댓글 작성을 하려면 로그인 해주세요" disabled>
+                </div>
+            </form>
+        </c:if>
+        <c:if test="${username != 'anonymousUser'}">
             <form id="commentForm">
                 <div class="form-group">
                     <input type="hidden" id="commentUsername" value="${username}">
@@ -125,6 +134,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">댓글 작성</button>
             </form>
+        </c:if>
             <div class="mt-3" id="commentsList">
                 <c:forEach items="${comments}" var="comment">
                     <div class="media mb-3" data-comment-id="${comment.id}">
