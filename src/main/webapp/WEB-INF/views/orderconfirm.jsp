@@ -45,7 +45,7 @@
                             <li>${ticket.ticketNames}</li>
                         </c:forEach>
                     </ul>
-                    <p><strong>총 결제 금액:</strong> <span id="totalPrice">${order.total_price}</span>원</p>
+                    <p><strong>총 결제 금액:</strong> <span id="totalPrice">${order.totalPrice}</span>원</p>
                 </div>
             </div>
         </div>
