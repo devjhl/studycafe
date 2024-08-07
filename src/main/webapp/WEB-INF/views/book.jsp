@@ -139,13 +139,16 @@
         remainingTime: 0 // 사용자가 남은 이용권 시간 (분 단위)
     };
 
+        let hasOrder = /*[[${hasOrders}]]*/
+
         $(document).ready(function() {
         // 서버에서 이용권 시간 확인
         fetch('/api/v1/checkOrder')
             .then(response => response.json())
             .then(data => {
                 userInfo.remainingTime = data.remainingTime; // 남은 이용권 시간 설정
-                hasOrder = data.hasOrder; // 이용권 구매 여부 설정
+                //hasOrder = data.hasOrder; // 이용권 구매 여부 설정
+                
             })
             .catch(error => {
                 console.error('Error checking order:', error);
