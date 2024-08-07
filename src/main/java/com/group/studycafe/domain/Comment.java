@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -32,18 +33,23 @@ public class Comment {
     @Column
     private LocalDateTime createdAt;
 
+    @Transient // 데이터베이스에 저장되지 않음을 명시
+    private String formattedCreatedAt;
+
+    public Comment(Gather gather, String username, String body) {
+        this.gather = gather;
+        this.username = username;
+        this.body = body;
+        this.createdAt = LocalDateTime.now();
+        this.formattedCreatedAt = this.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
     public static Comment createComment(CommentDto dto, Gather gather) {
         if (dto.getId() != null)
             throw new IllegalArgumentException("댓글 생성 실패! 댓글의 id가 없어야 합니다.");
         if (dto.getGatherId() != gather.getId())
             throw new IllegalArgumentException("댓글 생성 실패! 게시글의 id가 잘못됐습니다.");
-        return new Comment(
-                dto.getId(),
-                gather,
-                dto.getUsername(),
-                dto.getBody(),
-                LocalDateTime.now()
-        );
+        return new Comment(gather, dto.getUsername(), dto.getBody());
     }
 
     public void patch(CommentDto dto) {
@@ -53,5 +59,14 @@ public class Comment {
             this.username = dto.getUsername();
         if (dto.getBody() != null)
             this.body = dto.getBody();
+    }
+
+    // getter와 setter 추가
+    public String getFormattedCreatedAt() {
+        return formattedCreatedAt;
+    }
+
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
     }
 }

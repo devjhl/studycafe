@@ -11,10 +11,10 @@
         .content {
             min-height: 80vh;
             display: flex;
-            align-items: flex-start; /* Changed from center to flex-start */
+            align-items: flex-start;
             justify-content: center;
             flex-direction: column;
-            padding-bottom: 80px; /* Ensure there's space for footer */
+            padding-bottom: 80px;
         }
         .footer {
             position: fixed;

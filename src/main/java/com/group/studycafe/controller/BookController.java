@@ -30,9 +30,7 @@ public class BookController {
     public String book(@AuthenticationPrincipal User user, Model model) {
         List<Order> orders = orderService.findOrdersByUsername(user.getUsername());
         //
-        System.out.println("orders: " + orders);
         boolean hasOrders = !orders.isEmpty();
-        System.out.println("hasOrders: " + hasOrders);
         // Seat 데이터 가져오기
         List<Map<String, Object>> seatDataList = seatService.getAllSeats();
 

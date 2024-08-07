@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,8 +103,17 @@ public class GatherController {
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int size,
                                Model model) {
+        LocalDateTime dateTime = LocalDateTime.now(); // 실제 데이터베이스에서 가져온 시간으로 대체
+        String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Gather gather = gatherService.findById(id);
         Page<Comment> commentPage = commentService.getCommentsByGatherId(id, PageRequest.of(page, size));
+
+        // 댓글의 생성 시간을 포맷팅하여 설정
+        List<Comment> comments = commentPage.getContent().stream().map(comment -> {
+            String formattedCommentDateTime = comment.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            comment.setFormattedCreatedAt(formattedCommentDateTime);
+            return comment;
+        }).collect(Collectors.toList());
 
         // 현재 로그인된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,14 +122,16 @@ public class GatherController {
         boolean userHasLiked = currentUsername != null && likeService.userHasLiked(id, currentUsername);
         gather.setUserHasLiked(userHasLiked);
 
+        model.addAttribute("formattedDateTime", formattedDateTime);
         model.addAttribute("gather", gather);
-        model.addAttribute("comments", commentPage.getContent());
+        model.addAttribute("comments", comments); // 포맷팅된 댓글 리스트 전달
         model.addAttribute("username", currentUsername);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", commentPage.getTotalPages());
 
         return "detailGather";
     }
+
 
     private String getCurrentUsername(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

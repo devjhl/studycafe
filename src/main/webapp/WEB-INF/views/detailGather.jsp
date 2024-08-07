@@ -107,7 +107,7 @@
         <div class="post-header">
             <h1>${gather.title}</h1>
             <p><strong>${gather.username}</strong></p>
-            <p class="text-muted">작성일 ${gather.date} <span class="ml-2">조회수 ${gather.views}</span></p>
+            <p class="text-muted">작성일 ${formattedDateTime} <span class="ml-2">조회수 ${gather.views}</span></p>
         </div>
         <div class="post-content">
             <pre>${gather.content}</pre>
@@ -119,29 +119,29 @@
         <hr>
         <div class="comment-box">
             <h5>댓글</h5>
-        <c:if test="${username == 'anonymousUser'}">
-            <form id="commentForm">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="commentBody2" placeholder="댓글 작성을 하려면 로그인 해주세요" disabled>
-                </div>
-            </form>
-        </c:if>
-        <c:if test="${username != 'anonymousUser'}">
-            <form id="commentForm">
-                <div class="form-group">
-                    <input type="hidden" id="commentUsername" value="${username}">
-                    <input type="text" class="form-control" id="commentBody" placeholder="댓글을 작성해보세요.">
-                </div>
-                <button type="submit" class="btn btn-primary">댓글 작성</button>
-            </form>
-        </c:if>
+            <c:if test="${username == 'anonymousUser'}">
+                <form id="commentForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="commentBody2" placeholder="댓글 작성을 하려면 로그인 해주세요" disabled>
+                    </div>
+                </form>
+            </c:if>
+            <c:if test="${username != 'anonymousUser'}">
+                <form id="commentForm">
+                    <div class="form-group">
+                        <input type="hidden" id="commentUsername" value="${username}">
+                        <input type="text" class="form-control" id="commentBody" placeholder="댓글을 작성해보세요.">
+                    </div>
+                    <button type="submit" class="btn btn-primary">댓글 작성</button>
+                </form>
+            </c:if>
             <div class="mt-3" id="commentsList">
                 <c:forEach items="${comments}" var="comment">
                     <div class="media mb-3" data-comment-id="${comment.id}">
-                        <%--<img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">--%>
+                            <%--<img src="/img/user.png" class="mr-3 rounded-circle" alt="User Avatar" style="width: 40px;">--%>
                         <div class="media-body">
                             <h6 class="mt-0">${comment.username}</h6>
-                            <p class="text-muted">${comment.createdAt}</p>
+                            <p class="text-muted">${comment.formattedCreatedAt}</p>
                             <p class="comment-body">${comment.body}</p>
                             <input type="text" class="form-control comment-body-edit" style="display:none;" value="${comment.body}">
                             <c:if test="${username == comment.username}">
@@ -176,7 +176,7 @@
                 <i class="fas fa-heart"></i><span id="likeCount">${gather.likes}</span>
             </button>
         </c:if>
-            <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
+        <button class="btn btn-share" id="shareBtn"><i class="fas fa-share-alt"></i> 공유</button>
     </div>
 </div>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
@@ -303,10 +303,10 @@
                     newComment.classList.add('media', 'mb-3');
                     newComment.setAttribute('data-comment-id', data.id);
 
-                   /* const img = document.createElement('img');
-                    img.src = '/img/user.png';
-                    img.classList.add('mr-3', 'rounded-circle');
-                    img.style.width = '40px';*/
+                    /* const img = document.createElement('img');
+                     img.src = '/img/user.png';
+                     img.classList.add('mr-3', 'rounded-circle');
+                     img.style.width = '40px';*/
 
                     const mediaBody = document.createElement('div');
                     mediaBody.classList.add('media-body');
@@ -358,7 +358,7 @@
                     mediaBody.appendChild(commentBodyEdit);
                     mediaBody.appendChild(commentActions);
 
-                    newComment.appendChild(img);
+                    //newComment.appendChild(img);
                     newComment.appendChild(mediaBody);
 
                     commentList.prepend(newComment);
